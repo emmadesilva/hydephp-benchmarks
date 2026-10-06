@@ -75,7 +75,7 @@ if (isset($results['compare'])) {
     }
     $md .= "\nRuns marked with * were measured once, because one build takes many minutes.\n\n";
 
-    foreach ([1000, 10000] as $size) {
+    foreach ([10000] as $size) {
         $rows = [];
         foreach (['hyde-minimal', 'hyde-minimal-patched', 'jigsaw', 'jigsaw-commonmark', 'sculpin', 'hugo', 'eleventy', 'jekyll'] as $label) {
             $case = find($cases, $label, $size);
