@@ -357,6 +357,11 @@ class EleventyAdapter extends Adapter
 
 class JekyllAdapter extends Adapter
 {
+    /** Keep Jekyll's on-disk Markdown cache between builds, as Jekyll does by default. */
+    public function __construct(public readonly bool $diskCache = false)
+    {
+    }
+
     public function name(): string
     {
         return 'jekyll';
@@ -380,7 +385,7 @@ class JekyllAdapter extends Adapter
     public function command(string $workspace): array
     {
         // Jekyll 4 caches converted Markdown on disk between builds. Turned off so it does the full job every run.
-        return ['bundle', 'exec', 'jekyll', 'build', '--quiet', '--disable-disk-cache'];
+        return ['bundle', 'exec', 'jekyll', 'build', '--quiet', ...($this->diskCache ? [] : ['--disable-disk-cache'])];
     }
 
     public function env(string $workspace): array
@@ -395,6 +400,10 @@ class JekyllAdapter extends Adapter
 
     public function cleanPaths(string $workspace): array
     {
+        if ($this->diskCache) {
+            return [$this->outputDir($workspace)];
+        }
+
         return [$this->outputDir($workspace), "$workspace/.jekyll-cache", "$workspace/.jekyll-metadata"];
     }
 }

@@ -26,6 +26,7 @@ const NAMES = [
     'hugo' => 'Hugo',
     'eleventy' => 'Eleventy',
     'jekyll' => 'Jekyll',
+    'jekyll-disk-cache' => 'Jekyll, disk cache on',
 ];
 
 $results = [];
@@ -101,9 +102,10 @@ if (isset($results['compare'])) {
         sort($values);
         $cap = end($values) > 3 * $values[count($values) - 2] ? $values[count($values) - 2] * 1.25 : null;
 
+        $once = array_filter([find($cases, 'hyde-minimal', $size)], fn ($c) => $c && count($c['runs']) === 1);
         file_put_contents("$charts/compare-$size.svg", Svg::bars(
             'Build time for '.number_format($size).' blog posts',
-            'Median of 5 cold builds, lower is better. Same posts, same minimal layout.',
+            'Median of 5 cold builds'.($once ? ' (Hyde 2.0.3: one build)' : '').'. Same posts, same minimal layout. Lower is better.',
             $rows,
             [[Svg::ORANGE, 'Hyde 2.0.3'], [Svg::BLUE, 'Hyde with the fix'], [Svg::MUTED, 'Other generators']],
             $cap,
@@ -136,16 +138,18 @@ if (isset($results['scaling'])) {
     }
     $md .= "\n";
 
-    $series = function (string $label, int $upTo) use ($cases) {
+    // Every suite that measured a label at the default settings contributes points, later suites win.
+    $everything = [...($results['compare']['cases'] ?? []), ...$cases];
+    $series = function (string $label, int $upTo) use ($everything) {
         $points = [];
-        foreach ($cases as $case) {
-            if ($case['label'] === $label && $case['posts'] <= $upTo) {
-                $points[] = [$case['posts'], $case['summary']['wall']['median']];
+        foreach ($everything as $case) {
+            if ($case['label'] === $label && $case['posts'] <= $upTo && $case['content'] === 'medium' && ! $case['cpus']) {
+                $points[$case['posts']] = [$case['posts'], $case['summary']['wall']['median']];
             }
         }
-        usort($points, fn ($a, $b) => $a[0] <=> $b[0]);
+        ksort($points);
 
-        return $points;
+        return array_values($points);
     };
 
     file_put_contents("$charts/scaling.svg", Svg::lines(

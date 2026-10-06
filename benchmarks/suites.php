@@ -35,6 +35,7 @@ $generators = [
     'hugo' => [HugoAdapter::class],
     'eleventy' => [EleventyAdapter::class],
     'jekyll' => [JekyllAdapter::class],
+    'jekyll-disk-cache' => [JekyllAdapter::class, ['diskCache' => true]],
 ];
 
 // Builds that take long enough at this size that one run is all we can reasonably afford.
@@ -61,7 +62,13 @@ $php = fn (string $label, int $posts) => [
 
 return [
     // The headline comparison: every generator, same posts, same minimal layout.
-    'compare' => $cases(array_keys($generators), [100, 1000, 10000]),
+    'compare' => $cases(array_diff(array_keys($generators), ['jekyll-disk-cache']), [100, 1000, 10000]),
+
+    // A one-post site, which is almost all startup cost.
+    'startup' => $cases(['hyde', 'hyde-minimal-patched', 'jigsaw', 'sculpin', 'hugo', 'eleventy', 'jekyll'], [1]),
+
+    // What Jekyll's default Markdown cache does to a rebuild. The warm-up build fills the cache.
+    'jekyll-cache' => $cases(['jekyll', 'jekyll-disk-cache'], [1000]),
 
     // How Hyde's build time grows with the number of posts, before and after the fix.
     'scaling' => $cases(
