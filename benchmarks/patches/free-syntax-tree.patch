@@ -1,0 +1,43 @@
+--- a/src/Framework/Services/MarkdownService.php
++++ b/src/Framework/Services/MarkdownService.php
+@@ -11,6 +11,7 @@
+ use Hyde\Framework\Concerns\Internal\SetsUpMarkdownConverter;
+ use Hyde\Pages\DocumentationPage;
+ use Hyde\Markdown\MarkdownConverter;
++use League\CommonMark\Node\Node;
+ use Hyde\Markdown\Contracts\MarkdownPreProcessorContract as PreProcessor;
+ use Hyde\Markdown\Contracts\MarkdownPostProcessorContract as PostProcessor;
+ use League\CommonMark\Extension\DisallowedRawHtml\DisallowedRawHtmlExtension;
+@@ -70,13 +71,31 @@
+ 
+         $this->runPreProcessing();
+ 
+-        $this->html = (string) $this->converter->convert($this->markdown);
++        $rendered = $this->converter->convert($this->markdown);
++        $this->html = $rendered->getContent();
++
++        // Every node in the syntax tree points to its parent and siblings, so a discarded tree is circular garbage.
++        // Left alone, PHP's cycle collector has to find it, and each collection walks the whole heap, which keeps
++        // every page of the site. Taking the tree apart lets reference counting free it straight away instead.
++        static::freeSyntaxTree($rendered->getDocument());
+ 
+         $this->runPostProcessing();
+ 
+         return $this->html;
+     }
+ 
++    protected static function freeSyntaxTree(Node $node): void
++    {
++        $child = $node->firstChild();
++
++        while ($child !== null) {
++            $next = $child->next();
++            static::freeSyntaxTree($child);
++            $child->detach();
++            $child = $next;
++        }
++    }
++
+     protected function setupConverter(): void
+     {
+         $this->enableDynamicExtensions();

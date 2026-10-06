@@ -67,11 +67,13 @@ abstract class Adapter
 /** Hyde, as it ships: the default theme, a post feed home page, RSS and a sitemap. */
 class HydeAdapter extends Adapter
 {
-    /** The fixes in benchmarks/patches, see the README there. */
+    /** The fixes for the two quadratic slowdowns, see benchmarks/patches/README.md. */
     public const PATCHES = ['DynamicMarkdownLinkProcessor.php', 'Features.php'];
 
-    /** Apply the fixes in benchmarks/patches. */
-    public function __construct(public readonly bool $patched = false)
+    /** Frees each page's Markdown syntax tree right away, so the cycle collector has less to do. */
+    public const TREE_PATCH = 'MarkdownService.php';
+
+    public function __construct(public readonly bool $patched = false, public readonly bool $freeTree = false)
     {
     }
 
@@ -82,7 +84,7 @@ class HydeAdapter extends Adapter
 
     public function version(): string
     {
-        return 'HydePHP '.Composer::version(Paths::root(), 'hyde/framework').($this->patched ? ' + patch' : '');
+        return 'HydePHP '.Composer::version(Paths::root(), 'hyde/framework').($this->patched ? ' + patch' : '').($this->freeTree ? ' + tree fix' : '');
     }
 
     protected function template(): string
@@ -109,7 +111,7 @@ class HydeAdapter extends Adapter
         if ($this->patched) {
             // Load the fixed classes before Composer's autoloader would load the originals.
             $requires = '';
-            foreach (self::PATCHES as $file) {
+            foreach ([...self::PATCHES, ...($this->freeTree ? [self::TREE_PATCH] : [])] as $file) {
                 Fs::copy(Paths::bench("patches/$file"), "$workspace/patches/$file");
                 $requires .= "\nrequire __DIR__.'/patches/$file';";
             }

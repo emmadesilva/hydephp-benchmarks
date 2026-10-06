@@ -3,7 +3,7 @@ title: Why you should benchmark your code, even when you don't need to micro-opt
 description: I benchmarked Hyde against five other static site generators out of curiosity, and found a quadratic slowdown that small sites never show. Here's the process, the fix, and the numbers.
 category: engineering
 author: Emma
-date: 2026-10-06
+date: "2026-10-06 12:00"
 ---
 
 Build speed has never been something I worry about much in Hyde. It's always been fast enough. When I run a build on

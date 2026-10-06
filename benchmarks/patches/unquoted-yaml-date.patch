@@ -1,0 +1,14 @@
+--- a/src/Framework/Factories/BlogPostDataFactory.php
++++ b/src/Framework/Factories/BlogPostDataFactory.php
+@@ -84,8 +84,9 @@
+ 
+     protected function makeDate(): ?DateString
+     {
+-        if ($this->getMatter('date')) {
+-            return new DateString($this->getMatter('date'));
++        if ($date = $this->getMatter('date')) {
++            // YAML parses an unquoted date, like 2026-10-06, into a Unix timestamp.
++            return new DateString(is_int($date) ? gmdate('Y-m-d H:i', $date) : $date);
+         }
+ 
+         if (BlogPostDatePrefixHelper::hasDatePrefix($this->filePath)) {

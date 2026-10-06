@@ -51,6 +51,8 @@ function child(string $variant, int $count): int
         $convert = fn (string $markdown) => $parser->transform($markdown);
     } elseif ($variant === 'hyde') {
         // Boot the Hyde project this repository is, so render() runs with its real configuration.
+        // Laravel resolves some storage paths from the working directory, so run from the project root.
+        chdir(Paths::root());
         require Paths::root('vendor/autoload.php');
         $app = require Paths::root('app/bootstrap.php');
         $app->make(\Illuminate\Contracts\Console\Kernel::class)->bootstrap();

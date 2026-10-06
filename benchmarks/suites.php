@@ -29,6 +29,8 @@ $generators = [
     'hyde-patched' => [HydeAdapter::class, ['patched' => true]],
     'hyde-minimal' => [HydeMinimalAdapter::class],
     'hyde-minimal-patched' => [HydeMinimalAdapter::class, ['patched' => true]],
+    'hyde-minimal-tree' => [HydeMinimalAdapter::class, ['patched' => true, 'freeTree' => true]],
+    'hyde-tree' => [HydeAdapter::class, ['patched' => true, 'freeTree' => true]],
     'jigsaw' => [JigsawAdapter::class],
     'jigsaw-commonmark' => [JigsawAdapter::class, ['commonmark' => true]],
     'sculpin' => [SculpinAdapter::class],
@@ -62,7 +64,13 @@ $php = fn (string $label, int $posts) => [
 
 return [
     // The headline comparison: every generator, same posts, same minimal layout.
-    'compare' => $cases(array_diff(array_keys($generators), ['jekyll-disk-cache']), [100, 1000, 10000]),
+    'compare' => $cases(array_diff(array_keys($generators), ['jekyll-disk-cache', 'hyde-minimal-tree', 'hyde-tree']), [100, 1000, 10000]),
+
+    // The two quadratic fixes plus freeing each page's syntax tree, which takes load off the cycle collector.
+    'tree' => [
+        ...$cases(['hyde-minimal-tree', 'hyde-tree'], [1000, 10000], ['runs' => 3]),
+        ...$cases(['hyde-minimal-tree', 'hyde-tree'], [20000, 40000], ['runs' => 1, 'warmup' => false]),
+    ],
 
     // A one-post site, which is almost all startup cost.
     'startup' => $cases(['hyde', 'hyde-minimal-patched', 'jigsaw', 'sculpin', 'hugo', 'eleventy', 'jekyll'], [1]),
