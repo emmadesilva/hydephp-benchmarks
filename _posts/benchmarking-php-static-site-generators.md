@@ -241,7 +241,40 @@ Two Hyde-specific costs show up too, and both are easy to remove:
 - **Every heading is rendered through a Blade component**, so Hyde can add permalink anchors to headings. It does that
   even for blog posts, where permalinks are switched off by default. That's {{HEADING_SHARE}} of the build.
 - **Hyde builds a new Markdown converter for every page.** Building the CommonMark environment and registering its
-  extensions costs about a third of a millisecond each time. Reusing one converter would remove it.
+  extensions costs about a third of a millisecond each time. As the next section shows, that's the smaller half of what
+  it costs.
+
+## The last bit of the curve
+
+With both bugs fixed, the line was nearly flat, but not quite. At 40,000 posts the fixed build took 16.5 ms per post,
+against 9.3 ms at 10,000. Jigsaw stayed close to flat over the same range. So something was still growing with the
+size of the site.
+
+My first guess was PHP's garbage collector, and my first test of that guess said no: turning the collector off
+(`zend.enable_gc=0`) made a 2,500-post build 13% *slower* and pushed its memory from 96 MB to 364 MB. So I moved on.
+That was the wrong conclusion. The test had only shown that switching the collector off isn't the fix. It said nothing
+about how much time the collector was taking.
+
+PHP 8.3's `gc_status()` reports exactly that, so I printed it at the end of a build:
+
+| Hyde with both fixes, minimal layout | Collector runs | Time in the collector | Everything else, per post |
+| ---: | ---: | ---: | ---: |
+| 10,000 posts | 498 | 26 s (30%) | 6.2 ms |
+| 20,000 posts | 989 | 96 s (43%) | 6.4 ms |
+
+Everything except the collector was linear. The collector runs about once every 20 pages, which is also linear, but
+each run walks the live heap, and in a site generator the live heap holds every page on the site. Each run costs more
+than the last. That's quadratic again, just better hidden.
+
+The garbage comes from the Markdown parser. In league/commonmark's syntax tree, every node points to its parent and
+its neighbours, so a finished document is one big reference cycle that only the collector can free. Jigsaw shows it
+nicely. With its default php-markdown parser, which doesn't build a tree, the collector ran 8 times for 10,000 posts.
+With Jigsaw switched to CommonMark, it ran 264 times.
+
+Taking the tree apart once the HTML is rendered lets PHP free it straight away, and that halved the collector's work:
+{{TREE_SENTENCE}} Most of the garbage that's left comes from the converter Hyde builds for every page, because an
+environment and its extensions point at each other too. Reusing the converter would take care of that, but it needs
+some care around per-page state, so that one's a design job rather than a patch.
 
 ## Things I didn't expect
 
@@ -253,11 +286,11 @@ doesn't run long enough for that to happen.
 OPcache doesn't help either. On the command line, the cache only lives for one process, so it compiles every file once
 per build, which is what PHP does without it anyway.
 
-**Turning off the garbage collector made Hyde slower.** I thought PHP's cycle collector might explain why Hyde's
-per-page cost still creeps up slightly on very large sites, since Hyde keeps every page in memory and the collector
-has more to walk each time. With `zend.enable_gc=0`, the 2,500-post build was 13% slower and peaked at 364 MB instead of
-96 MB. Rendering a page creates a lot of short-lived circular references, and without the collector they pile up until
-the process is slow to allocate memory. The collector was doing useful work.
+**This blog post crashed the build.** The first time I built the site with this post in it, Hyde refused:
+`DateString::__construct(): Argument #1 ($string) must be of type string, int given`. My front matter said
+`date: 2026-10-06`, without quotes. YAML reads an unquoted date as a date, the parser hands Hyde a Unix timestamp, and
+Hyde only expects a string. Quoting it works around it, and the fix in Hyde is two lines. It's also exactly how most
+people would write a date, which is why it's worth fixing rather than documenting.
 
 **Post length matters less than you'd think.** {{CONTENT_SENTENCE}}
 
@@ -276,9 +309,10 @@ anyone, because very few Hyde sites have thousands of pages. Small sites are fas
 was never a symptom to investigate. That isn't a reason not to fix it. Sites grow, and someone migrating a big
 WordPress blog shouldn't find out the hard way.
 
-**Profile before you guess.** I was sure the second slowdown would be the garbage collector. It wasn't, and turning
-the collector off made things worse. Both real causes were in places I'd never have looked: a link rewriter and an
-`if` statement in the page `<head>`. The profiler found each of them in the first minute.
+**Measure before you guess, and measure the right thing.** Both bugs were in places I'd never have looked, a link
+rewriter and an `if` statement in the page `<head>`, and the profiler found each of them in the first minute. My one
+real guess, the garbage collector, I first ruled out with a test that couldn't actually answer the question. The
+collector did turn out to be the last part of the curve. `gc_status()` answered that in one build.
 
 **Prove a fix is a fix.** A faster function that changes the output is a regression with good marketing. The
 differential test, and Hyde's own tests passing unchanged, are what make me comfortable shipping these.
