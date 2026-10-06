@@ -1,0 +1,1455 @@
+{
+    "suite": "scaling",
+    "updated": "2026-10-06T09:42:23+00:00",
+    "machine": {
+        "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+        "cores": 4,
+        "memory_gb": 15.7,
+        "os": "Linux 6.18.44-fc-v70",
+        "php": "8.3.6",
+        "node": "v22.22.0",
+        "ruby": "3.3.6"
+    },
+    "cases": [
+        {
+            "label": "hyde-minimal",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3",
+            "posts": 1,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 2,
+                "files": 2,
+                "bytes": 6489
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.1981,
+                    "min": 0.1906,
+                    "max": 0.2004,
+                    "stddev": 0.0051
+                },
+                "user": {
+                    "median": 0.1453,
+                    "min": 0.1367,
+                    "max": 0.1589,
+                    "stddev": 0.0112
+                },
+                "system": {
+                    "median": 0.0479,
+                    "min": 0.0287,
+                    "max": 0.0541,
+                    "stddev": 0.0132
+                },
+                "max_rss_mb": {
+                    "median": 50.9,
+                    "min": 50.8,
+                    "max": 51,
+                    "stddev": 0.1
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.1981,
+                    "user": 0.1367,
+                    "system": 0.0541,
+                    "max_rss_mb": 50.9
+                },
+                {
+                    "wall": 0.2004,
+                    "user": 0.1453,
+                    "system": 0.0479,
+                    "max_rss_mb": 50.8
+                },
+                {
+                    "wall": 0.1906,
+                    "user": 0.1589,
+                    "system": 0.0287,
+                    "max_rss_mb": 51
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 1,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 2,
+                "files": 2,
+                "bytes": 6489
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.2125,
+                    "min": 0.1875,
+                    "max": 0.2214,
+                    "stddev": 0.0176
+                },
+                "user": {
+                    "median": 0.1431,
+                    "min": 0.1366,
+                    "max": 0.1574,
+                    "stddev": 0.0106
+                },
+                "system": {
+                    "median": 0.0551,
+                    "min": 0.0491,
+                    "max": 0.0594,
+                    "stddev": 0.0052
+                },
+                "max_rss_mb": {
+                    "median": 50.9,
+                    "min": 50.9,
+                    "max": 51,
+                    "stddev": 0.0577
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.2125,
+                    "user": 0.1431,
+                    "system": 0.0594,
+                    "max_rss_mb": 51
+                },
+                {
+                    "wall": 0.2214,
+                    "user": 0.1574,
+                    "system": 0.0551,
+                    "max_rss_mb": 50.9
+                },
+                {
+                    "wall": 0.1875,
+                    "user": 0.1366,
+                    "system": 0.0491,
+                    "max_rss_mb": 50.9
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 1,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 3,
+                "files": 8,
+                "bytes": 94274
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.2262,
+                    "min": 0.2155,
+                    "max": 0.24,
+                    "stddev": 0.0123
+                },
+                "user": {
+                    "median": 0.1628,
+                    "min": 0.1566,
+                    "max": 0.1813,
+                    "stddev": 0.0129
+                },
+                "system": {
+                    "median": 0.0566,
+                    "min": 0.0565,
+                    "max": 0.0581,
+                    "stddev": 0.0009
+                },
+                "max_rss_mb": {
+                    "median": 51.7,
+                    "min": 51.6,
+                    "max": 51.8,
+                    "stddev": 0.1
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.2262,
+                    "user": 0.1628,
+                    "system": 0.0581,
+                    "max_rss_mb": 51.8
+                },
+                {
+                    "wall": 0.2155,
+                    "user": 0.1566,
+                    "system": 0.0565,
+                    "max_rss_mb": 51.7
+                },
+                {
+                    "wall": 0.24,
+                    "user": 0.1813,
+                    "system": 0.0566,
+                    "max_rss_mb": 51.6
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3",
+            "posts": 10,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 11,
+                "files": 11,
+                "bytes": 68044
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.2422,
+                    "min": 0.2419,
+                    "max": 0.2522,
+                    "stddev": 0.0059
+                },
+                "user": {
+                    "median": 0.1953,
+                    "min": 0.1811,
+                    "max": 0.1967,
+                    "stddev": 0.0086
+                },
+                "system": {
+                    "median": 0.0453,
+                    "min": 0.0417,
+                    "max": 0.0562,
+                    "stddev": 0.0076
+                },
+                "max_rss_mb": {
+                    "median": 51.9,
+                    "min": 51.8,
+                    "max": 51.9,
+                    "stddev": 0.0577
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.2422,
+                    "user": 0.1811,
+                    "system": 0.0562,
+                    "max_rss_mb": 51.8
+                },
+                {
+                    "wall": 0.2419,
+                    "user": 0.1953,
+                    "system": 0.0417,
+                    "max_rss_mb": 51.9
+                },
+                {
+                    "wall": 0.2522,
+                    "user": 0.1967,
+                    "system": 0.0453,
+                    "max_rss_mb": 51.9
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 10,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 11,
+                "files": 11,
+                "bytes": 68044
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.2452,
+                    "min": 0.2364,
+                    "max": 0.2816,
+                    "stddev": 0.024
+                },
+                "user": {
+                    "median": 0.1913,
+                    "min": 0.1898,
+                    "max": 0.2016,
+                    "stddev": 0.0064
+                },
+                "system": {
+                    "median": 0.0491,
+                    "min": 0.0402,
+                    "max": 0.0676,
+                    "stddev": 0.014
+                },
+                "max_rss_mb": {
+                    "median": 52.1,
+                    "min": 52,
+                    "max": 52.2,
+                    "stddev": 0.1
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.2816,
+                    "user": 0.2016,
+                    "system": 0.0676,
+                    "max_rss_mb": 52.2
+                },
+                {
+                    "wall": 0.2364,
+                    "user": 0.1913,
+                    "system": 0.0402,
+                    "max_rss_mb": 52
+                },
+                {
+                    "wall": 0.2452,
+                    "user": 0.1898,
+                    "system": 0.0491,
+                    "max_rss_mb": 52.1
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 10,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 12,
+                "files": 17,
+                "bytes": 253615
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.297,
+                    "min": 0.2896,
+                    "max": 0.3307,
+                    "stddev": 0.0219
+                },
+                "user": {
+                    "median": 0.2517,
+                    "min": 0.2432,
+                    "max": 0.2538,
+                    "stddev": 0.0056
+                },
+                "system": {
+                    "median": 0.0442,
+                    "min": 0.0301,
+                    "max": 0.0677,
+                    "stddev": 0.019
+                },
+                "max_rss_mb": {
+                    "median": 53.5,
+                    "min": 53.4,
+                    "max": 53.7,
+                    "stddev": 0.1528
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.3307,
+                    "user": 0.2538,
+                    "system": 0.0677,
+                    "max_rss_mb": 53.4
+                },
+                {
+                    "wall": 0.2896,
+                    "user": 0.2517,
+                    "system": 0.0301,
+                    "max_rss_mb": 53.5
+                },
+                {
+                    "wall": 0.297,
+                    "user": 0.2432,
+                    "system": 0.0442,
+                    "max_rss_mb": 53.7
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 653658
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.7537,
+                    "min": 0.7281,
+                    "max": 0.7734,
+                    "stddev": 0.0227
+                },
+                "user": {
+                    "median": 0.6539,
+                    "min": 0.6375,
+                    "max": 0.6905,
+                    "stddev": 0.0271
+                },
+                "system": {
+                    "median": 0.0775,
+                    "min": 0.0718,
+                    "max": 0.0934,
+                    "stddev": 0.0112
+                },
+                "max_rss_mb": {
+                    "median": 54.7,
+                    "min": 54.7,
+                    "max": 54.9,
+                    "stddev": 0.1155
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.7537,
+                    "user": 0.6375,
+                    "system": 0.0934,
+                    "max_rss_mb": 54.7
+                },
+                {
+                    "wall": 0.7734,
+                    "user": 0.6905,
+                    "system": 0.0775,
+                    "max_rss_mb": 54.9
+                },
+                {
+                    "wall": 0.7281,
+                    "user": 0.6539,
+                    "system": 0.0718,
+                    "max_rss_mb": 54.7
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 653658
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.6444,
+                    "min": 0.5943,
+                    "max": 0.649,
+                    "stddev": 0.0303
+                },
+                "user": {
+                    "median": 0.5579,
+                    "min": 0.5253,
+                    "max": 0.5772,
+                    "stddev": 0.0262
+                },
+                "system": {
+                    "median": 0.0658,
+                    "min": 0.0593,
+                    "max": 0.0832,
+                    "stddev": 0.0124
+                },
+                "max_rss_mb": {
+                    "median": 54.5,
+                    "min": 54.5,
+                    "max": 54.6,
+                    "stddev": 0.0577
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.649,
+                    "user": 0.5772,
+                    "system": 0.0593,
+                    "max_rss_mb": 54.5
+                },
+                {
+                    "wall": 0.6444,
+                    "user": 0.5579,
+                    "system": 0.0832,
+                    "max_rss_mb": 54.6
+                },
+                {
+                    "wall": 0.5943,
+                    "user": 0.5253,
+                    "system": 0.0658,
+                    "max_rss_mb": 54.5
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 102,
+                "files": 107,
+                "bytes": 1814191
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.9378,
+                    "min": 0.9085,
+                    "max": 0.9474,
+                    "stddev": 0.0203
+                },
+                "user": {
+                    "median": 0.8144,
+                    "min": 0.7791,
+                    "max": 0.8632,
+                    "stddev": 0.0422
+                },
+                "system": {
+                    "median": 0.0694,
+                    "min": 0.0674,
+                    "max": 0.1392,
+                    "stddev": 0.0409
+                },
+                "max_rss_mb": {
+                    "median": 56,
+                    "min": 55.8,
+                    "max": 56,
+                    "stddev": 0.1155
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.9474,
+                    "user": 0.8632,
+                    "system": 0.0694,
+                    "max_rss_mb": 56
+                },
+                {
+                    "wall": 0.9378,
+                    "user": 0.7791,
+                    "system": 0.1392,
+                    "max_rss_mb": 56
+                },
+                {
+                    "wall": 0.9085,
+                    "user": 0.8144,
+                    "system": 0.0674,
+                    "max_rss_mb": 55.8
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3",
+            "posts": 250,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 251,
+                "files": 251,
+                "bytes": 1588274
+            },
+            "summary": {
+                "wall": {
+                    "median": 2.0126,
+                    "min": 1.9862,
+                    "max": 2.1898,
+                    "stddev": 0.1107
+                },
+                "user": {
+                    "median": 1.8417,
+                    "min": 1.8224,
+                    "max": 1.9724,
+                    "stddev": 0.0816
+                },
+                "system": {
+                    "median": 0.1506,
+                    "min": 0.1333,
+                    "max": 0.1902,
+                    "stddev": 0.0292
+                },
+                "max_rss_mb": {
+                    "median": 56.8,
+                    "min": 56.8,
+                    "max": 56.9,
+                    "stddev": 0.0577
+                }
+            },
+            "runs": [
+                {
+                    "wall": 1.9862,
+                    "user": 1.8224,
+                    "system": 0.1333,
+                    "max_rss_mb": 56.8
+                },
+                {
+                    "wall": 2.0126,
+                    "user": 1.8417,
+                    "system": 0.1506,
+                    "max_rss_mb": 56.9
+                },
+                {
+                    "wall": 2.1898,
+                    "user": 1.9724,
+                    "system": 0.1902,
+                    "max_rss_mb": 56.8
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 250,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 251,
+                "files": 251,
+                "bytes": 1588274
+            },
+            "summary": {
+                "wall": {
+                    "median": 1.4089,
+                    "min": 1.2779,
+                    "max": 1.5143,
+                    "stddev": 0.1184
+                },
+                "user": {
+                    "median": 1.2124,
+                    "min": 1.098,
+                    "max": 1.2849,
+                    "stddev": 0.0942
+                },
+                "system": {
+                    "median": 0.1681,
+                    "min": 0.1503,
+                    "max": 0.2061,
+                    "stddev": 0.0285
+                },
+                "max_rss_mb": {
+                    "median": 56.8,
+                    "min": 56.8,
+                    "max": 56.9,
+                    "stddev": 0.0577
+                }
+            },
+            "runs": [
+                {
+                    "wall": 1.2779,
+                    "user": 1.098,
+                    "system": 0.1503,
+                    "max_rss_mb": 56.8
+                },
+                {
+                    "wall": 1.4089,
+                    "user": 1.2124,
+                    "system": 0.1681,
+                    "max_rss_mb": 56.8
+                },
+                {
+                    "wall": 1.5143,
+                    "user": 1.2849,
+                    "system": 0.2061,
+                    "max_rss_mb": 56.9
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 250,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 252,
+                "files": 257,
+                "bytes": 4374907
+            },
+            "summary": {
+                "wall": {
+                    "median": 2.1628,
+                    "min": 2.0066,
+                    "max": 2.3322,
+                    "stddev": 0.1628
+                },
+                "user": {
+                    "median": 1.9058,
+                    "min": 1.7929,
+                    "max": 2.045,
+                    "stddev": 0.1263
+                },
+                "system": {
+                    "median": 0.2262,
+                    "min": 0.1682,
+                    "max": 0.2443,
+                    "stddev": 0.0398
+                },
+                "max_rss_mb": {
+                    "median": 58.7,
+                    "min": 58.7,
+                    "max": 58.8,
+                    "stddev": 0.0577
+                }
+            },
+            "runs": [
+                {
+                    "wall": 2.0066,
+                    "user": 1.7929,
+                    "system": 0.1682,
+                    "max_rss_mb": 58.7
+                },
+                {
+                    "wall": 2.3322,
+                    "user": 2.045,
+                    "system": 0.2443,
+                    "max_rss_mb": 58.7
+                },
+                {
+                    "wall": 2.1628,
+                    "user": 1.9058,
+                    "system": 0.2262,
+                    "max_rss_mb": 58.8
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3",
+            "posts": 500,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 501,
+                "files": 501,
+                "bytes": 3158052
+            },
+            "summary": {
+                "wall": {
+                    "median": 5.4198,
+                    "min": 5.2736,
+                    "max": 5.6452,
+                    "stddev": 0.1872
+                },
+                "user": {
+                    "median": 4.9818,
+                    "min": 4.9287,
+                    "max": 5.0498,
+                    "stddev": 0.0607
+                },
+                "system": {
+                    "median": 0.3073,
+                    "min": 0.2204,
+                    "max": 0.5631,
+                    "stddev": 0.1782
+                },
+                "max_rss_mb": {
+                    "median": 61.8,
+                    "min": 61.7,
+                    "max": 62,
+                    "stddev": 0.1528
+                }
+            },
+            "runs": [
+                {
+                    "wall": 5.4198,
+                    "user": 5.0498,
+                    "system": 0.2204,
+                    "max_rss_mb": 61.7
+                },
+                {
+                    "wall": 5.2736,
+                    "user": 4.9287,
+                    "system": 0.3073,
+                    "max_rss_mb": 62
+                },
+                {
+                    "wall": 5.6452,
+                    "user": 4.9818,
+                    "system": 0.5631,
+                    "max_rss_mb": 61.8
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 500,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 501,
+                "files": 501,
+                "bytes": 3158052
+            },
+            "summary": {
+                "wall": {
+                    "median": 2.6507,
+                    "min": 2.589,
+                    "max": 2.8957,
+                    "stddev": 0.1622
+                },
+                "user": {
+                    "median": 2.2891,
+                    "min": 2.2576,
+                    "max": 2.3945,
+                    "stddev": 0.0717
+                },
+                "system": {
+                    "median": 0.2832,
+                    "min": 0.2228,
+                    "max": 0.5322,
+                    "stddev": 0.164
+                },
+                "max_rss_mb": {
+                    "median": 61.9,
+                    "min": 61.9,
+                    "max": 62.1,
+                    "stddev": 0.1155
+                }
+            },
+            "runs": [
+                {
+                    "wall": 2.6507,
+                    "user": 2.3945,
+                    "system": 0.2228,
+                    "max_rss_mb": 62.1
+                },
+                {
+                    "wall": 2.589,
+                    "user": 2.2576,
+                    "system": 0.2832,
+                    "max_rss_mb": 61.9
+                },
+                {
+                    "wall": 2.8957,
+                    "user": 2.2891,
+                    "system": 0.5322,
+                    "max_rss_mb": 61.9
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 500,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 502,
+                "files": 507,
+                "bytes": 8652205
+            },
+            "summary": {
+                "wall": {
+                    "median": 4.1718,
+                    "min": 4.1005,
+                    "max": 4.4645,
+                    "stddev": 0.1929
+                },
+                "user": {
+                    "median": 3.6236,
+                    "min": 3.5708,
+                    "max": 3.6507,
+                    "stddev": 0.0406
+                },
+                "system": {
+                    "median": 0.5049,
+                    "min": 0.3997,
+                    "max": 0.7688,
+                    "stddev": 0.1902
+                },
+                "max_rss_mb": {
+                    "median": 63.9,
+                    "min": 63.9,
+                    "max": 63.9,
+                    "stddev": 0
+                }
+            },
+            "runs": [
+                {
+                    "wall": 4.1005,
+                    "user": 3.6507,
+                    "system": 0.3997,
+                    "max_rss_mb": 63.9
+                },
+                {
+                    "wall": 4.1718,
+                    "user": 3.5708,
+                    "system": 0.5049,
+                    "max_rss_mb": 63.9
+                },
+                {
+                    "wall": 4.4645,
+                    "user": 3.6236,
+                    "system": 0.7688,
+                    "max_rss_mb": 63.9
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3",
+            "posts": 1000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 1001,
+                "files": 1001,
+                "bytes": 6321927
+            },
+            "summary": {
+                "wall": {
+                    "median": 17.1738,
+                    "min": 17.0767,
+                    "max": 17.2972,
+                    "stddev": 0.1105
+                },
+                "user": {
+                    "median": 15.9262,
+                    "min": 15.8723,
+                    "max": 16.0465,
+                    "stddev": 0.0892
+                },
+                "system": {
+                    "median": 0.9421,
+                    "min": 0.8493,
+                    "max": 0.9744,
+                    "stddev": 0.0649
+                },
+                "max_rss_mb": {
+                    "median": 68,
+                    "min": 67.9,
+                    "max": 68,
+                    "stddev": 0.0577
+                }
+            },
+            "runs": [
+                {
+                    "wall": 17.0767,
+                    "user": 15.9262,
+                    "system": 0.8493,
+                    "max_rss_mb": 68
+                },
+                {
+                    "wall": 17.2972,
+                    "user": 16.0465,
+                    "system": 0.9421,
+                    "max_rss_mb": 67.9
+                },
+                {
+                    "wall": 17.1738,
+                    "user": 15.8723,
+                    "system": 0.9744,
+                    "max_rss_mb": 68
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 1000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 1001,
+                "files": 1001,
+                "bytes": 6321927
+            },
+            "summary": {
+                "wall": {
+                    "median": 5.6678,
+                    "min": 4.9258,
+                    "max": 6.346,
+                    "stddev": 0.7103
+                },
+                "user": {
+                    "median": 4.884,
+                    "min": 4.507,
+                    "max": 5.2484,
+                    "stddev": 0.3707
+                },
+                "system": {
+                    "median": 0.6719,
+                    "min": 0.3589,
+                    "max": 0.954,
+                    "stddev": 0.2977
+                },
+                "max_rss_mb": {
+                    "median": 68.9,
+                    "min": 68.8,
+                    "max": 69,
+                    "stddev": 0.1
+                }
+            },
+            "runs": [
+                {
+                    "wall": 4.9258,
+                    "user": 4.507,
+                    "system": 0.3589,
+                    "max_rss_mb": 68.8
+                },
+                {
+                    "wall": 5.6678,
+                    "user": 4.884,
+                    "system": 0.6719,
+                    "max_rss_mb": 69
+                },
+                {
+                    "wall": 6.346,
+                    "user": 5.2484,
+                    "system": 0.954,
+                    "max_rss_mb": 68.9
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 1000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 1002,
+                "files": 1005,
+                "bytes": 17225114
+            },
+            "summary": {
+                "wall": {
+                    "median": 9.0267,
+                    "min": 8.6103,
+                    "max": 9.4006,
+                    "stddev": 0.3953
+                },
+                "user": {
+                    "median": 7.8824,
+                    "min": 7.6089,
+                    "max": 7.9505,
+                    "stddev": 0.1808
+                },
+                "system": {
+                    "median": 1.026,
+                    "min": 0.8701,
+                    "max": 1.284,
+                    "stddev": 0.209
+                },
+                "max_rss_mb": {
+                    "median": 74.5,
+                    "min": 74.4,
+                    "max": 74.6,
+                    "stddev": 0.1
+                }
+            },
+            "runs": [
+                {
+                    "wall": 8.6103,
+                    "user": 7.6089,
+                    "system": 0.8701,
+                    "max_rss_mb": 74.5
+                },
+                {
+                    "wall": 9.0267,
+                    "user": 7.8824,
+                    "system": 1.026,
+                    "max_rss_mb": 74.6
+                },
+                {
+                    "wall": 9.4006,
+                    "user": 7.9505,
+                    "system": 1.284,
+                    "max_rss_mb": 74.4
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3",
+            "posts": 2500,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 2501,
+                "files": 2501,
+                "bytes": 15920267
+            },
+            "summary": {
+                "wall": {
+                    "median": 86.494,
+                    "min": 86.494,
+                    "max": 86.494,
+                    "stddev": 0
+                },
+                "user": {
+                    "median": 84.2384,
+                    "min": 84.2384,
+                    "max": 84.2384,
+                    "stddev": 0
+                },
+                "system": {
+                    "median": 0.818,
+                    "min": 0.818,
+                    "max": 0.818,
+                    "stddev": 0
+                },
+                "max_rss_mb": {
+                    "median": 95.7,
+                    "min": 95.7,
+                    "max": 95.7,
+                    "stddev": 0
+                }
+            },
+            "runs": [
+                {
+                    "wall": 86.494,
+                    "user": 84.2384,
+                    "system": 0.818,
+                    "max_rss_mb": 95.7
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 2500,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 2501,
+                "files": 2501,
+                "bytes": 15920267
+            },
+            "summary": {
+                "wall": {
+                    "median": 15.1005,
+                    "min": 14.4023,
+                    "max": 15.6612,
+                    "stddev": 0.6307
+                },
+                "user": {
+                    "median": 12.7084,
+                    "min": 12.676,
+                    "max": 13.1067,
+                    "stddev": 0.2399
+                },
+                "system": {
+                    "median": 1.6781,
+                    "min": 1.4351,
+                    "max": 2.6423,
+                    "stddev": 0.6385
+                },
+                "max_rss_mb": {
+                    "median": 96.4,
+                    "min": 96.1,
+                    "max": 96.5,
+                    "stddev": 0.2082
+                }
+            },
+            "runs": [
+                {
+                    "wall": 15.1005,
+                    "user": 13.1067,
+                    "system": 1.6781,
+                    "max_rss_mb": 96.1
+                },
+                {
+                    "wall": 14.4023,
+                    "user": 12.676,
+                    "system": 1.4351,
+                    "max_rss_mb": 96.5
+                },
+                {
+                    "wall": 15.6612,
+                    "user": 12.7084,
+                    "system": 2.6423,
+                    "max_rss_mb": 96.4
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 2500,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 2502,
+                "files": 2505,
+                "bytes": 43072531
+            },
+            "summary": {
+                "wall": {
+                    "median": 23.598,
+                    "min": 20.8336,
+                    "max": 24.9667,
+                    "stddev": 2.1055
+                },
+                "user": {
+                    "median": 21.052,
+                    "min": 19.2981,
+                    "max": 21.6011,
+                    "stddev": 1.2029
+                },
+                "system": {
+                    "median": 2.0966,
+                    "min": 1.1226,
+                    "max": 2.9046,
+                    "stddev": 0.8923
+                },
+                "max_rss_mb": {
+                    "median": 104.7,
+                    "min": 104.7,
+                    "max": 105,
+                    "stddev": 0.1732
+                }
+            },
+            "runs": [
+                {
+                    "wall": 20.8336,
+                    "user": 19.2981,
+                    "system": 1.1226,
+                    "max_rss_mb": 104.7
+                },
+                {
+                    "wall": 23.598,
+                    "user": 21.052,
+                    "system": 2.0966,
+                    "max_rss_mb": 104.7
+                },
+                {
+                    "wall": 24.9667,
+                    "user": 21.6011,
+                    "system": 2.9046,
+                    "max_rss_mb": 105
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 31953963
+            },
+            "summary": {
+                "wall": {
+                    "median": 319.3423,
+                    "min": 319.3423,
+                    "max": 319.3423,
+                    "stddev": 0
+                },
+                "user": {
+                    "median": 312.457,
+                    "min": 312.457,
+                    "max": 312.457,
+                    "stddev": 0
+                },
+                "system": {
+                    "median": 1.6163,
+                    "min": 1.6163,
+                    "max": 1.6163,
+                    "stddev": 0
+                },
+                "max_rss_mb": {
+                    "median": 136.3,
+                    "min": 136.3,
+                    "max": 136.3,
+                    "stddev": 0
+                }
+            },
+            "runs": [
+                {
+                    "wall": 319.3423,
+                    "user": 312.457,
+                    "system": 1.6163,
+                    "max_rss_mb": 136.3
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 31953963
+            },
+            "summary": {
+                "wall": {
+                    "median": 33.12,
+                    "min": 33.0342,
+                    "max": 34.849,
+                    "stddev": 1.0239
+                },
+                "user": {
+                    "median": 28.3759,
+                    "min": 28.0041,
+                    "max": 29.4206,
+                    "stddev": 0.7344
+                },
+                "system": {
+                    "median": 4.6282,
+                    "min": 4.0552,
+                    "max": 4.889,
+                    "stddev": 0.4265
+                },
+                "max_rss_mb": {
+                    "median": 138.4,
+                    "min": 138.3,
+                    "max": 138.4,
+                    "stddev": 0.0577
+                }
+            },
+            "runs": [
+                {
+                    "wall": 33.0342,
+                    "user": 28.3759,
+                    "system": 4.0552,
+                    "max_rss_mb": 138.4
+                },
+                {
+                    "wall": 34.849,
+                    "user": 29.4206,
+                    "system": 4.889,
+                    "max_rss_mb": 138.4
+                },
+                {
+                    "wall": 33.12,
+                    "user": 28.0041,
+                    "system": 4.6282,
+                    "max_rss_mb": 138.3
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 5002,
+                "files": 5005,
+                "bytes": 86188539
+            },
+            "summary": {
+                "wall": {
+                    "median": 51.8413,
+                    "min": 51.1009,
+                    "max": 52.0421,
+                    "stddev": 0.4957
+                },
+                "user": {
+                    "median": 44.8958,
+                    "min": 44.1834,
+                    "max": 45.6041,
+                    "stddev": 0.7104
+                },
+                "system": {
+                    "median": 6.1904,
+                    "min": 5.5679,
+                    "max": 6.2064,
+                    "stddev": 0.3641
+                },
+                "max_rss_mb": {
+                    "median": 155.3,
+                    "min": 155.1,
+                    "max": 155.4,
+                    "stddev": 0.1528
+                }
+            },
+            "runs": [
+                {
+                    "wall": 52.0421,
+                    "user": 45.6041,
+                    "system": 5.5679,
+                    "max_rss_mb": 155.1
+                },
+                {
+                    "wall": 51.8413,
+                    "user": 44.8958,
+                    "system": 6.2064,
+                    "max_rss_mb": 155.3
+                },
+                {
+                    "wall": 51.1009,
+                    "user": 44.1834,
+                    "system": 6.1904,
+                    "max_rss_mb": 155.4
+                }
+            ]
+        }
+    ]
+}
