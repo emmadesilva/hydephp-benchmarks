@@ -1,0 +1,93 @@
+--- a/src/Markdown/Processing/DynamicMarkdownLinkProcessor.php
++++ b/src/Markdown/Processing/DynamicMarkdownLinkProcessor.php
+@@ -7,6 +7,7 @@
+ use Hyde\Hyde;
+ use Illuminate\Support\Str;
+ use Hyde\Support\Filesystem\MediaFile;
++use Hyde\Foundation\Kernel\RouteCollection;
+ use Hyde\Markdown\Contracts\MarkdownPostProcessorContract;
+ 
+ class DynamicMarkdownLinkProcessor implements MarkdownPostProcessorContract
+@@ -14,36 +15,55 @@
+     /** @var array<string, \Hyde\Support\Filesystem\MediaFile>|null */
+     protected static ?array $assetMapCache = null;
+ 
++    /** @var \WeakMap<\Hyde\Foundation\Kernel\RouteCollection, array{int, array<string, \Hyde\Support\Models\Route>}>|null */
++    protected static ?\WeakMap $routeMapCache = null;
++
+     public static function postprocess(string $html): string
+     {
+-        foreach (static::routeMap() as $sourcePath => $route) {
+-            $patterns = [
+-                sprintf('<a href="%s"', $sourcePath),
+-                sprintf('<a href="/%s"', $sourcePath),
+-            ];
+-
+-            $html = str_replace($patterns, sprintf('<a href="%s"', $route->getLink()), $html);
++        // Cheap bail-out for the common case of a page with no links or images at all.
++        if (! str_contains($html, '<a href="') && ! str_contains($html, '<img src="')) {
++            return $html;
+         }
+ 
+-        foreach (static::assetMap() as $sourcePath => $mediaFile) {
+-            $patterns = [
+-                sprintf('<img src="%s"', $sourcePath),
+-                sprintf('<img src="/%s"', $sourcePath),
+-            ];
++        return preg_replace_callback('/<(a href|img src)="\/?([^"]*)"/', function (array $matches): string {
++            [$tag, $attribute, $path] = $matches;
+ 
+-            $html = str_replace($patterns, sprintf('<img src="%s"', static::assetPath($mediaFile)), $html);
+-        }
++            if ($attribute === 'a href') {
++                $route = static::routeMap()[$path] ?? null;
++
++                return $route ? sprintf('<a href="%s"', $route->getLink()) : $tag;
++            }
+ 
+-        return $html;
++            $mediaFile = static::assetMap()[$path] ?? null;
++
++            return $mediaFile ? sprintf('<img src="%s"', static::assetPath($mediaFile)) : $tag;
++        }, $html);
+     }
+ 
+     /** @return array<string, \Hyde\Support\Models\Route> */
+     protected static function routeMap(): array
+     {
++        $routes = Hyde::routes();
++        static::$routeMapCache ??= new \WeakMap();
++
++        // Routes can still be added after the map is built (extensions, tests), so rebuild when the count changes.
++        [$count, $map] = static::$routeMapCache[$routes] ?? [-1, []];
++
++        if ($count !== $routes->count()) {
++            $map = static::buildRouteMap($routes);
++            static::$routeMapCache[$routes] = [$routes->count(), $map];
++        }
++
++        return $map;
++    }
++
++    /** @return array<string, \Hyde\Support\Models\Route> */
++    protected static function buildRouteMap(RouteCollection $routes): array
++    {
+         $map = [];
+ 
+         /** @var \Hyde\Support\Models\Route $route */
+-        foreach (Hyde::routes() as $route) {
++        foreach ($routes as $route) {
+             $map[$route->getSourcePath()] = $route;
+         }
+ 
+--- a/src/Facades/Features.php
++++ b/src/Facades/Features.php
+@@ -111,7 +111,7 @@
+             && static::hasMarkdownPosts()
+             && Config::getBool('hyde.rss.enabled', true)
+             && extension_loaded('simplexml')
+-            && count(MarkdownPost::files()) > 0;
++            && Hyde::files()->contains(fn (\Hyde\Support\Filesystem\SourceFile $file): bool => $file->pageClass === MarkdownPost::class);
+     }
+ 
+     /**

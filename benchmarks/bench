@@ -1,0 +1,198 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Static site generator benchmarks.
+ *
+ *   php benchmarks/bench <suite> [--only=hyde,hugo] [--posts=1000] [--runs=5]
+ *   php benchmarks/bench list
+ *
+ * Results are written to benchmarks/results/<suite>.json. Run `php benchmarks/report` afterwards
+ * to turn them into tables and charts.
+ */
+
+declare(strict_types=1);
+
+namespace Bench;
+
+require __DIR__.'/src/Corpus.php';
+require __DIR__.'/src/Process.php';
+require __DIR__.'/src/Support.php';
+require __DIR__.'/src/Adapters.php';
+
+$suites = require __DIR__.'/suites.php';
+$options = [];
+$suite = 'list';
+foreach (array_slice($argv, 1) as $arg) {
+    if (preg_match('/^--(only|posts|runs)=(.+)$/', $arg, $m)) {
+        $options[$m[1]] = $m[2];
+    } else {
+        $suite = $arg;
+    }
+}
+
+if (! isset($suites[$suite])) {
+    echo "Suites:\n";
+    foreach ($suites as $name => $cases) {
+        printf("  %-12s %d cases\n", $name, count($cases));
+    }
+    exit($suite === 'list' ? 0 : 1);
+}
+
+$cases = $suites[$suite];
+if (isset($options['only'])) {
+    $only = explode(',', $options['only']);
+    $cases = array_filter($cases, fn ($case) => in_array($case['label'], $only, true));
+}
+if (isset($options['posts'])) {
+    $posts = array_map('intval', explode(',', $options['posts']));
+    $cases = array_filter($cases, fn ($case) => in_array($case['posts'], $posts, true));
+}
+
+$machine = Machine::describe();
+printf("Machine: %s, %d cores, %s GB, PHP %s\n\n", $machine['cpu'], $machine['cores'], $machine['memory_gb'], $machine['php']);
+
+$results = [];
+
+// Cases with the same corpus are prepared together, then measured round-robin: run 1 of every
+// case, then run 2 of every case, and so on. If the machine gets slower halfway through
+// (it's a shared cloud VM, it will) every generator takes the hit, not just whichever ran last.
+$groups = [];
+foreach ($cases as $case) {
+    $case += ['content' => 'medium', 'php' => [], 'cpus' => null, 'runs' => 5, 'warmup' => true];
+    $case['runs'] = (int) ($options['runs'] ?? $case['runs']);
+    $groups[$case['posts'].'/'.$case['content']][] = $case;
+}
+
+foreach ($groups as $group) {
+    ['posts' => $count, 'content' => $content] = $group[0];
+    printf("== %s posts, %s length ==\n", number_format($count), $content);
+
+    $prepared = [];
+    foreach ($group as $case) {
+        /** @var Adapter $adapter */
+        $adapter = new $case['adapter'](...($case['args'] ?? []));
+        $adapter->phpArgs = $case['php'];
+        $workspace = Paths::work(sprintf('%s/%s-%d-%s', $suite, preg_replace('/[^a-z0-9]+/', '-', $case['label']), $count, $content));
+
+        $adapter->prepare($workspace, (new Corpus)->posts($count, $content));
+
+        $command = $adapter->command($workspace);
+        if ($case['cpus']) {
+            $command = ['taskset', '-c', '0-'.($case['cpus'] - 1), ...$command];
+        }
+
+        $prepared[] = compact('case', 'adapter', 'workspace', 'command') + ['runs' => [], 'output' => null];
+    }
+
+    // One warm-up run each: fills the OS file cache and checks the build actually works.
+    // Cases slow enough to take many minutes per build skip it, and are checked on their first run instead.
+    foreach ($prepared as &$item) {
+        if ($item['case']['warmup']) {
+            measure($item);
+            $item['output'] = verify($item);
+        }
+    }
+    unset($item);
+
+    $maxRuns = max(array_column(array_column($prepared, 'case'), 'runs'));
+    for ($run = 1; $run <= $maxRuns; $run++) {
+        foreach ($prepared as &$item) {
+            if ($run <= $item['case']['runs']) {
+                $item['runs'][] = measure($item)->toArray();
+                $item['output'] ??= verify($item);
+                fprintf(STDERR, "  . %s run %d: %.2fs\n", $item['case']['label'], $run, end($item['runs'])['wall']);
+            }
+        }
+        unset($item);
+    }
+
+    foreach ($prepared as $item) {
+        $summary = Stats::summarize($item['runs']);
+        printf("  %-24s %9.3fs  ±%.3f  %7.1f MB  cpu %.2fs\n",
+            $item['case']['label'],
+            $summary['wall']['median'],
+            $summary['wall']['stddev'],
+            $summary['max_rss_mb']['median'],
+            $summary['user']['median'] + $summary['system']['median'],
+        );
+
+        $results[] = [
+            'label' => $item['case']['label'],
+            'generator' => $item['adapter']->name(),
+            'version' => $item['adapter']->version(),
+            'posts' => $count,
+            'content' => $content,
+            'php_args' => $item['case']['php'],
+            'cpus' => $item['case']['cpus'],
+            'command' => implode(' ', array_map(fn ($part) => str_replace(Paths::root().'/', '', $part), $item['command'])),
+            'output' => $item['output'],
+            'summary' => $summary,
+            'runs' => $item['runs'],
+        ];
+    }
+    echo "\n";
+
+    // Saved after every group, so a long run that dies halfway still leaves its results behind.
+    save($suite, $machine, $results);
+}
+
+function measure(array $item): Measurement
+{
+    /** @var Adapter $adapter */
+    $adapter = $item['adapter'];
+    $workspace = $item['workspace'];
+
+    foreach ($adapter->cleanPaths($workspace) as $path) {
+        Fs::clean($path);
+    }
+
+    $log = "$workspace.log";
+    $measurement = Process::measure($item['command'], $workspace, $adapter->env($workspace), $log);
+
+    if ($measurement->exitCode !== 0) {
+        fwrite(STDERR, "\n{$item['case']['label']} failed with exit code {$measurement->exitCode}:\n".file_get_contents($log));
+        exit(1);
+    }
+
+    return $measurement;
+}
+
+/** Sanity check: one page per post plus the home page, or the numbers mean nothing. */
+function verify(array $item): array
+{
+    $adapter = $item['adapter'];
+    $workspace = $item['workspace'];
+    $log = "$workspace.log";
+    $output = Fs::stats($adapter->outputDir($workspace));
+    $expected = $item['case']['posts'] + 1;
+    if ($output['html'] < $expected) {
+        fwrite(STDERR, "\n{$item['case']['label']} produced {$output['html']} HTML files, expected at least $expected. See $log\n");
+        exit(1);
+    }
+
+    return $output;
+}
+
+function save(string $suite, array $machine, array $results): void
+{
+    @mkdir(Paths::results(), recursive: true);
+    $file = Paths::results("$suite.json");
+
+    // Re-running a subset (--only, --posts) replaces those cases and keeps the rest.
+    $key = fn (array $case) => implode('|', [$case['label'], $case['posts'], $case['content'], $case['cpus']]);
+    $existing = is_file($file) ? json_decode(file_get_contents($file), true)['cases'] : [];
+    $byKey = [];
+    foreach ([...$existing, ...$results] as $case) {
+        $byKey[$key($case)] = $case;
+    }
+
+    file_put_contents($file, json_encode([
+        'suite' => $suite,
+        'updated' => gmdate('c'),
+        'machine' => $machine,
+        'cases' => array_values($byKey),
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
+
+    echo "Saved ".str_replace(Paths::root().'/', '', $file)."\n\n";
+}

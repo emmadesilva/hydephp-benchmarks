@@ -1,0 +1,11 @@
+# Benchmark workspaces, regenerated on every run
+/work/
+
+# Installed toolchains (setup.sh puts them back)
+/generators/*/vendor/
+/generators/*/node_modules/
+/generators/hugo/hugo
+/generators/jekyll/.bundle/
+
+# Profiler output
+profile.folded

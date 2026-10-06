@@ -1,0 +1,7 @@
+title: Bench
+permalink: /posts/:title.html
+exclude: [Gemfile, Gemfile.lock, vendor]
+kramdown:
+  # No other generator in the comparison highlights code at build time.
+  syntax_highlighter_opts:
+    disable: true

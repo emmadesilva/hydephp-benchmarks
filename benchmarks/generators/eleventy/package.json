@@ -1,0 +1,8 @@
+{
+  "name": "hydephp-benchmarks-eleventy",
+  "private": true,
+  "description": "Eleventy, pinned for the static site generator benchmarks",
+  "dependencies": {
+    "@11ty/eleventy": "3.1.6"
+  }
+}

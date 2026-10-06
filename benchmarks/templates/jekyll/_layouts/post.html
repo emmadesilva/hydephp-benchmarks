@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ page.title }} | Bench</title>
+    <meta name="description" content="{{ page.description }}">
+</head>
+<body>
+<header><a href="/index.html">Bench</a></header>
+<main>
+    <article>
+        <h1>{{ page.title }}</h1>
+        <p class="meta">By {{ page.author }} in {{ page.category }} on {{ page.date | date: "%b %-d, %Y" }}</p>
+        {{ content }}
+    </article>
+</main>
+</body>
+</html>
