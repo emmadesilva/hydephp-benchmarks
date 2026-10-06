@@ -48,7 +48,7 @@ class DynamicMarkdownLinkProcessor implements MarkdownPostProcessorContract
             $mediaFile = static::assetMap()[$path] ?? null;
 
             return $mediaFile ? sprintf('<img src="%s"', static::assetPath($mediaFile)) : $tag;
-        }, $html);
+        }, $html) ?? $html;
     }
 
     /** @return array<string, \Hyde\Support\Models\Route> */

@@ -1,26 +1,39 @@
 ---
-title: I benchmarked six static site generators and found two bugs in my own
-description: Reproducible build-time benchmarks for Hyde, Jigsaw, Sculpin, Hugo, Eleventy and Jekyll, the quadratic slowdown they uncovered in Hyde, and what else I learned measuring them
+title: Why you should benchmark your code, even when you don't need to micro-optimize
+description: I benchmarked Hyde against five other static site generators out of curiosity, and found a quadratic slowdown that small sites never show. Here's the process, the fix, and the numbers.
 category: engineering
 author: Emma
 date: 2026-10-06
 ---
 
-While writing [Why You Should Use a PHP Static Site Generator](why-you-should-use-a-php-static-site-generator.html), I typed this sentence:
+Build speed has never been something I worry about much in Hyde. It's always been fast enough. When I run a build on
+one of my own sites, it finishes in a second or two, and the output says something like a few milliseconds per page.
+So when I make decisions about Hyde, I make them for the developer experience: nicer APIs, better defaults, less
+config. Shaving microseconds off a build that already finishes before you've looked back at your editor just isn't
+where the value is.
+
+But while writing [Why You Should Use a PHP Static Site Generator](why-you-should-use-a-php-static-site-generator.html),
+I typed this sentence:
 
 > In Hyde, each page builds in a few milliseconds, so even sites with tens of thousands of pages are no problem.
 
-It felt true. Hyde builds my sites in a second or two. But I'd never measured it, and if I'm going to put a claim like
-that in front of people, I should be able to show the numbers. Nobody else had published numbers for the PHP generators
-either, at least none I could find that were recent and reproducible.
+And I realised I hadn't actually checked that in ages. My only reference was those small sites. The milliseconds-per-page
+part I'd seen with my own eyes. The "tens of thousands of pages" part was an assumption: if each page takes a few
+milliseconds, ten thousand pages take ten thousand times that. Hyde builds pages one after the other, so it should
+scale linearly. Right?
 
-So I built a benchmark. It compares Hyde with Jigsaw and Sculpin, the other two PHP generators, and with Hugo, Eleventy and
-Jekyll as reference points. Everything is in a [public repository](https://github.com/emmadesilva/hydephp-benchmarks),
-including the raw results, so you can check my work or run it on your own machine.
+So, mostly out of curiosity, I built a proper benchmark. It compares Hyde with Jigsaw and Sculpin, the other two PHP
+generators, and with Hugo, Eleventy and Jekyll as reference points, from one post up to forty thousand. Everything is in
+a [public repository](https://github.com/emmadesilva/hydephp-benchmarks), including the raw results, so you can check
+my work or run it on your own machine.
 
-The short version: the sentence was wrong. Hyde 2.0.3 took **over an hour** to build 10,000 blog posts. The
-reason turned out to be two small bugs, and fixing them brings that down to about two minutes. Here's how I got there,
-and what else I learned along the way.
+It turns out the assumption was wrong. Hyde 2.0.3 took **over an hour** to build 10,000 blog posts. Not because each
+page is slow, but because of two small bugs that made every page do a little bit of work *for every other page on the
+site*. On a small site you'd never notice. On a big one, it's the whole build. Fixing them took a few lines of code
+and brought that hour down to about two minutes.
+
+That's really what this post is about. Benchmarking isn't only for people chasing microseconds. Even if you never
+plan to optimise anything, it's the cheapest way to find out whether your code behaves the way you *think* it does.
 
 ## Making the comparison fair
 
@@ -152,6 +165,14 @@ page, and a link to every route and media file, with and without a leading slash
 On a 1,002-page site that's 13,026 comparisons, and every output was identical. To make sure the test could actually
 fail, I broke the patch on purpose (I dropped the leading-slash handling) and it caught it on the first page.
 
+Then I ran every test file in Hyde's own suite that touches the two changed classes, or the feed, sitemap and metadata
+code around them, once on stock 2.0.3 and once patched: 293 tests, the same results both ways. {{BYTE_IDENTICAL}}
+
+One thing that bit me while doing that: my first patched run had four failures, and for a minute I thought I'd broken
+image links. I hadn't. An earlier test run had failed halfway through and left a renamed file behind in my scratch
+project, and the next run tripped over it. Resetting the project before every test file made the failures disappear on
+both versions. If a "regression" only shows up in the second run, suspect the leftovers from the first.
+
 ## After the fix
 
 ![Time per post as the blog grows, before and after the fix](_media/benchmarks/per-post.svg)
@@ -243,15 +264,35 @@ the process is slow to allocate memory. The collector was doing useful work.
 **The build time Hyde prints isn't the time you wait.** {{TIMER_SENTENCE}} It's worth timing builds from outside
 the process.
 
-## So, is the sentence true?
+## What I'm taking away from this
 
-With the fixes, nearly. Hyde builds a post in about 6 ms with a minimal layout and 10–13 ms with the full default theme,
-and the cost per page stays roughly flat: {{LARGE_SENTENCE}}. Without them, it's not true at all, and I'm glad I found
-out before you did.
+**Benchmark the shape, not the speed.** At 100 posts, the two bugs together cost about a quarter of a second, and the
+build still worked out to a few milliseconds per page. Every number I'd ever seen was true. What I'd never seen was
+how the number *changes* as the site grows, and that's where the problem was. A benchmark at 10 and 100 times your
+real size is cheap to run, and it's the only way to see a curve.
 
-Jigsaw is faster, mostly because of the Markdown parser, and Hugo is faster than everyone. If raw build speed for a huge
-site is what you need most, Hugo is the honest answer. For everything else, the difference between a 5-second build and
-a 1-second build is mostly how long you look at your terminal.
+**Most people never hit this, and that's exactly why it survived.** I presume it hasn't been a real problem for
+anyone, because very few Hyde sites have thousands of pages. Small sites are fast either way, so there
+was never a symptom to investigate. That isn't a reason not to fix it. Sites grow, and someone migrating a big
+WordPress blog shouldn't find out the hard way.
+
+**Profile before you guess.** I was sure the second slowdown would be the garbage collector. It wasn't, and turning
+the collector off made things worse. Both real causes were in places I'd never have looked: a link rewriter and an
+`if` statement in the page `<head>`. The profiler found each of them in the first minute.
+
+**Prove a fix is a fix.** A faster function that changes the output is a regression with good marketing. The
+differential test, and Hyde's own tests passing unchanged, are what make me comfortable shipping these.
+
+**Measure from the outside.** The time a tool prints about itself and the time you spend waiting are not the same
+number, and the gap grows with the site.
+
+So, is the sentence from the other post true? With the fixes, it is: Hyde builds a post in about 6 ms with a minimal
+layout and 10–13 ms with the full default theme, and the cost per page stays roughly flat as the site grows,
+{{LARGE_SENTENCE}}. Without them, it isn't. Jigsaw is faster, mostly because of its Markdown parser, and Hugo is faster
+than everyone. If raw build speed for a huge site is what you need most, Hugo is the honest answer. For everything
+else, the difference between a 5-second build and a 1-second build is mostly how long you look at your terminal.
+
+I'm glad I went looking anyway.
 
 ## Run it yourself
 

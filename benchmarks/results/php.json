@@ -1,0 +1,1389 @@
+{
+    "suite": "php",
+    "updated": "2026-10-06T12:33:36+00:00",
+    "machine": {
+        "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+        "cores": 4,
+        "memory_gb": 15.7,
+        "os": "Linux 6.18.44-fc-v70",
+        "php": "8.3.6",
+        "node": "v22.22.0",
+        "ruby": "3.3.6"
+    },
+    "cases": [
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 653658
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.847,
+                    "min": 0.7732,
+                    "max": 0.9352,
+                    "stddev": 0.0588
+                },
+                "user": {
+                    "median": 0.689,
+                    "min": 0.6253,
+                    "max": 0.7778,
+                    "stddev": 0.0547
+                },
+                "system": {
+                    "median": 0.1396,
+                    "min": 0.1316,
+                    "max": 0.1795,
+                    "stddev": 0.019
+                },
+                "max_rss_mb": {
+                    "median": 54.7,
+                    "min": 54.5,
+                    "max": 54.9,
+                    "stddev": 0.1483
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.8449,
+                    "user": 0.689,
+                    "system": 0.1316,
+                    "max_rss_mb": 54.9
+                },
+                {
+                    "wall": 0.7732,
+                    "user": 0.6253,
+                    "system": 0.1396,
+                    "max_rss_mb": 54.7
+                },
+                {
+                    "wall": 0.9352,
+                    "user": 0.7778,
+                    "system": 0.1422,
+                    "max_rss_mb": 54.5
+                },
+                {
+                    "wall": 0.8782,
+                    "user": 0.6896,
+                    "system": 0.1795,
+                    "max_rss_mb": 54.8
+                },
+                {
+                    "wall": 0.847,
+                    "user": 0.6792,
+                    "system": 0.1384,
+                    "max_rss_mb": 54.7
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched +opcache",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 653658
+            },
+            "summary": {
+                "wall": {
+                    "median": 1.0208,
+                    "min": 0.8946,
+                    "max": 1.1343,
+                    "stddev": 0.0855
+                },
+                "user": {
+                    "median": 0.7973,
+                    "min": 0.7343,
+                    "max": 0.9058,
+                    "stddev": 0.0646
+                },
+                "system": {
+                    "median": 0.1734,
+                    "min": 0.1547,
+                    "max": 0.2209,
+                    "stddev": 0.025
+                },
+                "max_rss_mb": {
+                    "median": 60.9,
+                    "min": 60.6,
+                    "max": 61.1,
+                    "stddev": 0.1789
+                }
+            },
+            "runs": [
+                {
+                    "wall": 1.0325,
+                    "user": 0.827,
+                    "system": 0.1685,
+                    "max_rss_mb": 60.6
+                },
+                {
+                    "wall": 0.8946,
+                    "user": 0.7343,
+                    "system": 0.1547,
+                    "max_rss_mb": 60.9
+                },
+                {
+                    "wall": 1.001,
+                    "user": 0.7973,
+                    "system": 0.1824,
+                    "max_rss_mb": 60.9
+                },
+                {
+                    "wall": 1.1343,
+                    "user": 0.9058,
+                    "system": 0.1734,
+                    "max_rss_mb": 61.1
+                },
+                {
+                    "wall": 1.0208,
+                    "user": 0.773,
+                    "system": 0.2209,
+                    "max_rss_mb": 60.9
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched +jit",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1",
+                "-d",
+                "opcache.jit=tracing",
+                "-d",
+                "opcache.jit_buffer_size=128M"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=128M hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 653658
+            },
+            "summary": {
+                "wall": {
+                    "median": 1.2084,
+                    "min": 1.0517,
+                    "max": 1.423,
+                    "stddev": 0.1364
+                },
+                "user": {
+                    "median": 0.909,
+                    "min": 0.8327,
+                    "max": 1.0534,
+                    "stddev": 0.0824
+                },
+                "system": {
+                    "median": 0.2863,
+                    "min": 0.201,
+                    "max": 0.3142,
+                    "stddev": 0.045
+                },
+                "max_rss_mb": {
+                    "median": 71.7,
+                    "min": 71.3,
+                    "max": 71.8,
+                    "stddev": 0.2074
+                }
+            },
+            "runs": [
+                {
+                    "wall": 1.1642,
+                    "user": 0.8835,
+                    "system": 0.2412,
+                    "max_rss_mb": 71.3
+                },
+                {
+                    "wall": 1.0517,
+                    "user": 0.8327,
+                    "system": 0.201,
+                    "max_rss_mb": 71.7
+                },
+                {
+                    "wall": 1.423,
+                    "user": 1.0534,
+                    "system": 0.3142,
+                    "max_rss_mb": 71.6
+                },
+                {
+                    "wall": 1.2604,
+                    "user": 0.9378,
+                    "system": 0.289,
+                    "max_rss_mb": 71.8
+                },
+                {
+                    "wall": 1.2084,
+                    "user": 0.909,
+                    "system": 0.2863,
+                    "max_rss_mb": 71.8
+                }
+            ]
+        },
+        {
+            "label": "jigsaw",
+            "generator": "jigsaw",
+            "version": "Jigsaw 1.8.8",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 vendor/tightenco/jigsaw/jigsaw build --pretty=false --no-ansi --no-interaction",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 656524
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.4104,
+                    "min": 0.3537,
+                    "max": 0.472,
+                    "stddev": 0.0467
+                },
+                "user": {
+                    "median": 0.2721,
+                    "min": 0.2571,
+                    "max": 0.3236,
+                    "stddev": 0.0254
+                },
+                "system": {
+                    "median": 0.1405,
+                    "min": 0.0793,
+                    "max": 0.1717,
+                    "stddev": 0.0433
+                },
+                "max_rss_mb": {
+                    "median": 42.1,
+                    "min": 41.9,
+                    "max": 42.3,
+                    "stddev": 0.1483
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.3537,
+                    "user": 0.2701,
+                    "system": 0.0793,
+                    "max_rss_mb": 42.1
+                },
+                {
+                    "wall": 0.4016,
+                    "user": 0.2571,
+                    "system": 0.1405,
+                    "max_rss_mb": 42.3
+                },
+                {
+                    "wall": 0.472,
+                    "user": 0.2797,
+                    "system": 0.1717,
+                    "max_rss_mb": 41.9
+                },
+                {
+                    "wall": 0.4547,
+                    "user": 0.2721,
+                    "system": 0.158,
+                    "max_rss_mb": 42.2
+                },
+                {
+                    "wall": 0.4104,
+                    "user": 0.3236,
+                    "system": 0.0814,
+                    "max_rss_mb": 42.1
+                }
+            ]
+        },
+        {
+            "label": "jigsaw +opcache",
+            "generator": "jigsaw",
+            "version": "Jigsaw 1.8.8",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 vendor/tightenco/jigsaw/jigsaw build --pretty=false --no-ansi --no-interaction",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 656524
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.435,
+                    "min": 0.4032,
+                    "max": 0.594,
+                    "stddev": 0.0761
+                },
+                "user": {
+                    "median": 0.305,
+                    "min": 0.2739,
+                    "max": 0.3601,
+                    "stddev": 0.0318
+                },
+                "system": {
+                    "median": 0.1241,
+                    "min": 0.1051,
+                    "max": 0.1987,
+                    "stddev": 0.0413
+                },
+                "max_rss_mb": {
+                    "median": 45.1,
+                    "min": 45,
+                    "max": 45.1,
+                    "stddev": 0.0447
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.435,
+                    "user": 0.3194,
+                    "system": 0.1051,
+                    "max_rss_mb": 45.1
+                },
+                {
+                    "wall": 0.4032,
+                    "user": 0.2739,
+                    "system": 0.1241,
+                    "max_rss_mb": 45.1
+                },
+                {
+                    "wall": 0.4822,
+                    "user": 0.2985,
+                    "system": 0.1788,
+                    "max_rss_mb": 45
+                },
+                {
+                    "wall": 0.594,
+                    "user": 0.3601,
+                    "system": 0.1987,
+                    "max_rss_mb": 45.1
+                },
+                {
+                    "wall": 0.4258,
+                    "user": 0.305,
+                    "system": 0.1174,
+                    "max_rss_mb": 45.1
+                }
+            ]
+        },
+        {
+            "label": "jigsaw +jit",
+            "generator": "jigsaw",
+            "version": "Jigsaw 1.8.8",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1",
+                "-d",
+                "opcache.jit=tracing",
+                "-d",
+                "opcache.jit_buffer_size=128M"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=128M vendor/tightenco/jigsaw/jigsaw build --pretty=false --no-ansi --no-interaction",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 656524
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.6588,
+                    "min": 0.4972,
+                    "max": 0.7532,
+                    "stddev": 0.1057
+                },
+                "user": {
+                    "median": 0.4284,
+                    "min": 0.3802,
+                    "max": 0.4759,
+                    "stddev": 0.0413
+                },
+                "system": {
+                    "median": 0.1795,
+                    "min": 0.1059,
+                    "max": 0.3091,
+                    "stddev": 0.0807
+                },
+                "max_rss_mb": {
+                    "median": 50.9,
+                    "min": 50.5,
+                    "max": 51,
+                    "stddev": 0.1949
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.4972,
+                    "user": 0.3832,
+                    "system": 0.1059,
+                    "max_rss_mb": 50.9
+                },
+                {
+                    "wall": 0.5296,
+                    "user": 0.3802,
+                    "system": 0.1205,
+                    "max_rss_mb": 50.5
+                },
+                {
+                    "wall": 0.6588,
+                    "user": 0.4473,
+                    "system": 0.1996,
+                    "max_rss_mb": 50.9
+                },
+                {
+                    "wall": 0.6673,
+                    "user": 0.4759,
+                    "system": 0.1795,
+                    "max_rss_mb": 50.9
+                },
+                {
+                    "wall": 0.7532,
+                    "user": 0.4284,
+                    "system": 0.3091,
+                    "max_rss_mb": 51
+                }
+            ]
+        },
+        {
+            "label": "sculpin",
+            "generator": "sculpin",
+            "version": "Sculpin 3.3.1",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 vendor/sculpin/sculpin/bin/sculpin generate --env=prod --no-ansi --no-interaction --project-dir=benchmarks/work/php/sculpin-100-medium",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 668483
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.6104,
+                    "min": 0.5366,
+                    "max": 0.714,
+                    "stddev": 0.0649
+                },
+                "user": {
+                    "median": 0.4824,
+                    "min": 0.4231,
+                    "max": 0.5694,
+                    "stddev": 0.0537
+                },
+                "system": {
+                    "median": 0.1039,
+                    "min": 0.0877,
+                    "max": 0.1352,
+                    "stddev": 0.0215
+                },
+                "max_rss_mb": {
+                    "median": 61.4,
+                    "min": 61.2,
+                    "max": 61.5,
+                    "stddev": 0.114
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.5915,
+                    "user": 0.4824,
+                    "system": 0.0924,
+                    "max_rss_mb": 61.5
+                },
+                {
+                    "wall": 0.6336,
+                    "user": 0.5121,
+                    "system": 0.0877,
+                    "max_rss_mb": 61.2
+                },
+                {
+                    "wall": 0.5366,
+                    "user": 0.4231,
+                    "system": 0.1039,
+                    "max_rss_mb": 61.4
+                },
+                {
+                    "wall": 0.714,
+                    "user": 0.5694,
+                    "system": 0.1352,
+                    "max_rss_mb": 61.3
+                },
+                {
+                    "wall": 0.6104,
+                    "user": 0.4746,
+                    "system": 0.1292,
+                    "max_rss_mb": 61.4
+                }
+            ]
+        },
+        {
+            "label": "sculpin +opcache",
+            "generator": "sculpin",
+            "version": "Sculpin 3.3.1",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 vendor/sculpin/sculpin/bin/sculpin generate --env=prod --no-ansi --no-interaction --project-dir=benchmarks/work/php/sculpin-opcache-100-medium",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 668483
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.7121,
+                    "min": 0.676,
+                    "max": 0.9563,
+                    "stddev": 0.1151
+                },
+                "user": {
+                    "median": 0.5366,
+                    "min": 0.5253,
+                    "max": 0.8426,
+                    "stddev": 0.135
+                },
+                "system": {
+                    "median": 0.1456,
+                    "min": 0.109,
+                    "max": 0.1734,
+                    "stddev": 0.0231
+                },
+                "max_rss_mb": {
+                    "median": 65.1,
+                    "min": 65.1,
+                    "max": 65.3,
+                    "stddev": 0.0894
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.676,
+                    "user": 0.5253,
+                    "system": 0.1432,
+                    "max_rss_mb": 65.3
+                },
+                {
+                    "wall": 0.9563,
+                    "user": 0.8426,
+                    "system": 0.109,
+                    "max_rss_mb": 65.1
+                },
+                {
+                    "wall": 0.7121,
+                    "user": 0.5362,
+                    "system": 0.1734,
+                    "max_rss_mb": 65.1
+                },
+                {
+                    "wall": 0.7403,
+                    "user": 0.5797,
+                    "system": 0.1511,
+                    "max_rss_mb": 65.2
+                },
+                {
+                    "wall": 0.6905,
+                    "user": 0.5366,
+                    "system": 0.1456,
+                    "max_rss_mb": 65.1
+                }
+            ]
+        },
+        {
+            "label": "sculpin +jit",
+            "generator": "sculpin",
+            "version": "Sculpin 3.3.1",
+            "posts": 100,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1",
+                "-d",
+                "opcache.jit=tracing",
+                "-d",
+                "opcache.jit_buffer_size=128M"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=128M vendor/sculpin/sculpin/bin/sculpin generate --env=prod --no-ansi --no-interaction --project-dir=benchmarks/work/php/sculpin-jit-100-medium",
+            "output": {
+                "html": 101,
+                "files": 101,
+                "bytes": 668483
+            },
+            "summary": {
+                "wall": {
+                    "median": 0.9844,
+                    "min": 0.8708,
+                    "max": 1.061,
+                    "stddev": 0.0786
+                },
+                "user": {
+                    "median": 0.7311,
+                    "min": 0.6457,
+                    "max": 0.7814,
+                    "stddev": 0.0539
+                },
+                "system": {
+                    "median": 0.2305,
+                    "min": 0.195,
+                    "max": 0.2743,
+                    "stddev": 0.0301
+                },
+                "max_rss_mb": {
+                    "median": 73.5,
+                    "min": 73.4,
+                    "max": 73.6,
+                    "stddev": 0.0837
+                }
+            },
+            "runs": [
+                {
+                    "wall": 0.9398,
+                    "user": 0.7166,
+                    "system": 0.195,
+                    "max_rss_mb": 73.4
+                },
+                {
+                    "wall": 1.0478,
+                    "user": 0.7814,
+                    "system": 0.2305,
+                    "max_rss_mb": 73.5
+                },
+                {
+                    "wall": 1.061,
+                    "user": 0.7711,
+                    "system": 0.2743,
+                    "max_rss_mb": 73.4
+                },
+                {
+                    "wall": 0.9844,
+                    "user": 0.7311,
+                    "system": 0.2389,
+                    "max_rss_mb": 73.5
+                },
+                {
+                    "wall": 0.8708,
+                    "user": 0.6457,
+                    "system": 0.211,
+                    "max_rss_mb": 73.6
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 31953963
+            },
+            "summary": {
+                "wall": {
+                    "median": 42.9563,
+                    "min": 40.6915,
+                    "max": 45.0991,
+                    "stddev": 1.7141
+                },
+                "user": {
+                    "median": 36.287,
+                    "min": 34.7928,
+                    "max": 38.0287,
+                    "stddev": 1.2214
+                },
+                "system": {
+                    "median": 6.0007,
+                    "min": 3.919,
+                    "max": 6.5239,
+                    "stddev": 1.0481
+                },
+                "max_rss_mb": {
+                    "median": 138.3,
+                    "min": 138.2,
+                    "max": 138.4,
+                    "stddev": 0.0837
+                }
+            },
+            "runs": [
+                {
+                    "wall": 43.8823,
+                    "user": 37.2138,
+                    "system": 5.9578,
+                    "max_rss_mb": 138.2
+                },
+                {
+                    "wall": 41.8653,
+                    "user": 34.7928,
+                    "system": 6.33,
+                    "max_rss_mb": 138.3
+                },
+                {
+                    "wall": 40.6915,
+                    "user": 36.0967,
+                    "system": 3.919,
+                    "max_rss_mb": 138.3
+                },
+                {
+                    "wall": 42.9563,
+                    "user": 36.287,
+                    "system": 6.0007,
+                    "max_rss_mb": 138.2
+                },
+                {
+                    "wall": 45.0991,
+                    "user": 38.0287,
+                    "system": 6.5239,
+                    "max_rss_mb": 138.4
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched +opcache",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 31953963
+            },
+            "summary": {
+                "wall": {
+                    "median": 41.2448,
+                    "min": 38.6401,
+                    "max": 45.8181,
+                    "stddev": 2.614
+                },
+                "user": {
+                    "median": 34.7186,
+                    "min": 32.2684,
+                    "max": 38.2742,
+                    "stddev": 2.2682
+                },
+                "system": {
+                    "median": 5.7619,
+                    "min": 4.2118,
+                    "max": 6.8885,
+                    "stddev": 0.9998
+                },
+                "max_rss_mb": {
+                    "median": 143.4,
+                    "min": 143.1,
+                    "max": 143.5,
+                    "stddev": 0.1643
+                }
+            },
+            "runs": [
+                {
+                    "wall": 40.7909,
+                    "user": 34.4328,
+                    "system": 5.7168,
+                    "max_rss_mb": 143.5
+                },
+                {
+                    "wall": 45.8181,
+                    "user": 38.2742,
+                    "system": 6.8885,
+                    "max_rss_mb": 143.4
+                },
+                {
+                    "wall": 41.2448,
+                    "user": 36.512,
+                    "system": 4.2118,
+                    "max_rss_mb": 143.1
+                },
+                {
+                    "wall": 38.6401,
+                    "user": 32.2684,
+                    "system": 5.7619,
+                    "max_rss_mb": 143.4
+                },
+                {
+                    "wall": 41.5889,
+                    "user": 34.7186,
+                    "system": 6.3335,
+                    "max_rss_mb": 143.2
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched +jit",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1",
+                "-d",
+                "opcache.jit=tracing",
+                "-d",
+                "opcache.jit_buffer_size=128M"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=128M hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 31953963
+            },
+            "summary": {
+                "wall": {
+                    "median": 39.1557,
+                    "min": 36.7899,
+                    "max": 42.7362,
+                    "stddev": 2.2768
+                },
+                "user": {
+                    "median": 32.8077,
+                    "min": 30.9969,
+                    "max": 35.5391,
+                    "stddev": 1.6728
+                },
+                "system": {
+                    "median": 5.9607,
+                    "min": 4.0679,
+                    "max": 6.5607,
+                    "stddev": 0.9406
+                },
+                "max_rss_mb": {
+                    "median": 154.4,
+                    "min": 154.3,
+                    "max": 154.6,
+                    "stddev": 0.1225
+                }
+            },
+            "runs": [
+                {
+                    "wall": 39.1557,
+                    "user": 32.8077,
+                    "system": 5.7556,
+                    "max_rss_mb": 154.3
+                },
+                {
+                    "wall": 39.3785,
+                    "user": 32.8559,
+                    "system": 5.9654,
+                    "max_rss_mb": 154.4
+                },
+                {
+                    "wall": 36.7899,
+                    "user": 32.1239,
+                    "system": 4.0679,
+                    "max_rss_mb": 154.4
+                },
+                {
+                    "wall": 37.649,
+                    "user": 30.9969,
+                    "system": 5.9607,
+                    "max_rss_mb": 154.6
+                },
+                {
+                    "wall": 42.7362,
+                    "user": 35.5391,
+                    "system": 6.5607,
+                    "max_rss_mb": 154.3
+                }
+            ]
+        },
+        {
+            "label": "jigsaw",
+            "generator": "jigsaw",
+            "version": "Jigsaw 1.8.8",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 vendor/tightenco/jigsaw/jigsaw build --pretty=false --no-ansi --no-interaction",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 32102877
+            },
+            "summary": {
+                "wall": {
+                    "median": 14.8497,
+                    "min": 13.7469,
+                    "max": 16.4707,
+                    "stddev": 1.0292
+                },
+                "user": {
+                    "median": 10.321,
+                    "min": 9.7454,
+                    "max": 11.1035,
+                    "stddev": 0.4912
+                },
+                "system": {
+                    "median": 4.2841,
+                    "min": 3.7728,
+                    "max": 5.0896,
+                    "stddev": 0.5251
+                },
+                "max_rss_mb": {
+                    "median": 157.1,
+                    "min": 156.9,
+                    "max": 157.2,
+                    "stddev": 0.1342
+                }
+            },
+            "runs": [
+                {
+                    "wall": 14.4379,
+                    "user": 10.1853,
+                    "system": 4.0374,
+                    "max_rss_mb": 157.1
+                },
+                {
+                    "wall": 13.7469,
+                    "user": 9.7454,
+                    "system": 3.7728,
+                    "max_rss_mb": 157.2
+                },
+                {
+                    "wall": 14.8497,
+                    "user": 10.321,
+                    "system": 4.2841,
+                    "max_rss_mb": 156.9
+                },
+                {
+                    "wall": 15.4083,
+                    "user": 10.4137,
+                    "system": 4.7029,
+                    "max_rss_mb": 157.1
+                },
+                {
+                    "wall": 16.4707,
+                    "user": 11.1035,
+                    "system": 5.0896,
+                    "max_rss_mb": 156.9
+                }
+            ]
+        },
+        {
+            "label": "jigsaw +opcache",
+            "generator": "jigsaw",
+            "version": "Jigsaw 1.8.8",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 vendor/tightenco/jigsaw/jigsaw build --pretty=false --no-ansi --no-interaction",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 32102877
+            },
+            "summary": {
+                "wall": {
+                    "median": 14.7188,
+                    "min": 13.7527,
+                    "max": 16.5762,
+                    "stddev": 1.0532
+                },
+                "user": {
+                    "median": 10.067,
+                    "min": 9.8162,
+                    "max": 11.1902,
+                    "stddev": 0.5332
+                },
+                "system": {
+                    "median": 4.4268,
+                    "min": 3.6951,
+                    "max": 5.1248,
+                    "stddev": 0.5603
+                },
+                "max_rss_mb": {
+                    "median": 124.4,
+                    "min": 124.1,
+                    "max": 124.5,
+                    "stddev": 0.1517
+                }
+            },
+            "runs": [
+                {
+                    "wall": 14.7188,
+                    "user": 10.0615,
+                    "system": 4.3319,
+                    "max_rss_mb": 124.4
+                },
+                {
+                    "wall": 15.4602,
+                    "user": 10.259,
+                    "system": 4.9287,
+                    "max_rss_mb": 124.4
+                },
+                {
+                    "wall": 13.7527,
+                    "user": 9.8162,
+                    "system": 3.6951,
+                    "max_rss_mb": 124.4
+                },
+                {
+                    "wall": 14.6658,
+                    "user": 10.067,
+                    "system": 4.4268,
+                    "max_rss_mb": 124.5
+                },
+                {
+                    "wall": 16.5762,
+                    "user": 11.1902,
+                    "system": 5.1248,
+                    "max_rss_mb": 124.1
+                }
+            ]
+        },
+        {
+            "label": "jigsaw +jit",
+            "generator": "jigsaw",
+            "version": "Jigsaw 1.8.8",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1",
+                "-d",
+                "opcache.jit=tracing",
+                "-d",
+                "opcache.jit_buffer_size=128M"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=128M vendor/tightenco/jigsaw/jigsaw build --pretty=false --no-ansi --no-interaction",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 32102877
+            },
+            "summary": {
+                "wall": {
+                    "median": 16.1913,
+                    "min": 12.5055,
+                    "max": 18.4439,
+                    "stddev": 2.1833
+                },
+                "user": {
+                    "median": 10.1965,
+                    "min": 8.294,
+                    "max": 10.7964,
+                    "stddev": 1.1887
+                },
+                "system": {
+                    "median": 6.0013,
+                    "min": 3.6326,
+                    "max": 7.2876,
+                    "stddev": 1.3797
+                },
+                "max_rss_mb": {
+                    "median": 129.9,
+                    "min": 129.9,
+                    "max": 130.3,
+                    "stddev": 0.2191
+                }
+            },
+            "runs": [
+                {
+                    "wall": 16.1913,
+                    "user": 10.7462,
+                    "system": 5.2014,
+                    "max_rss_mb": 129.9
+                },
+                {
+                    "wall": 12.5055,
+                    "user": 8.6334,
+                    "system": 3.6326,
+                    "max_rss_mb": 130.3
+                },
+                {
+                    "wall": 18.4439,
+                    "user": 10.7964,
+                    "system": 7.2876,
+                    "max_rss_mb": 130.3
+                },
+                {
+                    "wall": 14.9144,
+                    "user": 8.294,
+                    "system": 6.3929,
+                    "max_rss_mb": 129.9
+                },
+                {
+                    "wall": 16.3894,
+                    "user": 10.1965,
+                    "system": 6.0013,
+                    "max_rss_mb": 129.9
+                }
+            ]
+        },
+        {
+            "label": "sculpin",
+            "generator": "sculpin",
+            "version": "Sculpin 3.3.1",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 vendor/sculpin/sculpin/bin/sculpin generate --env=prod --no-ansi --no-interaction --project-dir=benchmarks/work/php/sculpin-5000-medium",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 32701789
+            },
+            "summary": {
+                "wall": {
+                    "median": 26.8701,
+                    "min": 24.5245,
+                    "max": 31.6151,
+                    "stddev": 3.3375
+                },
+                "user": {
+                    "median": 22.5989,
+                    "min": 21.6603,
+                    "max": 26.7867,
+                    "stddev": 2.0795
+                },
+                "system": {
+                    "median": 3.8547,
+                    "min": 2.4772,
+                    "max": 6.3873,
+                    "stddev": 1.5802
+                },
+                "max_rss_mb": {
+                    "median": 415.8,
+                    "min": 415.2,
+                    "max": 415.9,
+                    "stddev": 0.2793
+                }
+            },
+            "runs": [
+                {
+                    "wall": 31.02,
+                    "user": 24.1652,
+                    "system": 6.3873,
+                    "max_rss_mb": 415.2
+                },
+                {
+                    "wall": 24.9649,
+                    "user": 22.1362,
+                    "system": 2.4772,
+                    "max_rss_mb": 415.9
+                },
+                {
+                    "wall": 26.8701,
+                    "user": 22.5989,
+                    "system": 3.8547,
+                    "max_rss_mb": 415.8
+                },
+                {
+                    "wall": 31.6151,
+                    "user": 26.7867,
+                    "system": 4.3228,
+                    "max_rss_mb": 415.6
+                },
+                {
+                    "wall": 24.5245,
+                    "user": 21.6603,
+                    "system": 2.6343,
+                    "max_rss_mb": 415.8
+                }
+            ]
+        },
+        {
+            "label": "sculpin +opcache",
+            "generator": "sculpin",
+            "version": "Sculpin 3.3.1",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 vendor/sculpin/sculpin/bin/sculpin generate --env=prod --no-ansi --no-interaction --project-dir=benchmarks/work/php/sculpin-opcache-5000-medium",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 32701789
+            },
+            "summary": {
+                "wall": {
+                    "median": 28.4993,
+                    "min": 25.6206,
+                    "max": 29.5907,
+                    "stddev": 1.8056
+                },
+                "user": {
+                    "median": 23.8941,
+                    "min": 21.9752,
+                    "max": 24.9198,
+                    "stddev": 1.1581
+                },
+                "system": {
+                    "median": 3.8235,
+                    "min": 2.2878,
+                    "max": 4.2756,
+                    "stddev": 0.81
+                },
+                "max_rss_mb": {
+                    "median": 417.4,
+                    "min": 417.2,
+                    "max": 418.3,
+                    "stddev": 0.4393
+                }
+            },
+            "runs": [
+                {
+                    "wall": 28.5299,
+                    "user": 24.3734,
+                    "system": 3.8235,
+                    "max_rss_mb": 417.3
+                },
+                {
+                    "wall": 28.4993,
+                    "user": 23.8941,
+                    "system": 4.1809,
+                    "max_rss_mb": 418.3
+                },
+                {
+                    "wall": 25.7327,
+                    "user": 23.0461,
+                    "system": 2.2878,
+                    "max_rss_mb": 417.2
+                },
+                {
+                    "wall": 25.6206,
+                    "user": 21.9752,
+                    "system": 3.3556,
+                    "max_rss_mb": 417.4
+                },
+                {
+                    "wall": 29.5907,
+                    "user": 24.9198,
+                    "system": 4.2756,
+                    "max_rss_mb": 417.5
+                }
+            ]
+        },
+        {
+            "label": "sculpin +jit",
+            "generator": "sculpin",
+            "version": "Sculpin 3.3.1",
+            "posts": 5000,
+            "content": "medium",
+            "php_args": [
+                "-d",
+                "opcache.enable_cli=1",
+                "-d",
+                "opcache.jit=tracing",
+                "-d",
+                "opcache.jit_buffer_size=128M"
+            ],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 -d opcache.enable_cli=1 -d opcache.jit=tracing -d opcache.jit_buffer_size=128M vendor/sculpin/sculpin/bin/sculpin generate --env=prod --no-ansi --no-interaction --project-dir=benchmarks/work/php/sculpin-jit-5000-medium",
+            "output": {
+                "html": 5001,
+                "files": 5001,
+                "bytes": 32701789
+            },
+            "summary": {
+                "wall": {
+                    "median": 24.6728,
+                    "min": 21.883,
+                    "max": 26.4618,
+                    "stddev": 1.7341
+                },
+                "user": {
+                    "median": 20.3042,
+                    "min": 18.7694,
+                    "max": 21.9426,
+                    "stddev": 1.2313
+                },
+                "system": {
+                    "median": 3.9436,
+                    "min": 2.821,
+                    "max": 4.1041,
+                    "stddev": 0.5324
+                },
+                "max_rss_mb": {
+                    "median": 430,
+                    "min": 430,
+                    "max": 430.2,
+                    "stddev": 0.0894
+                }
+            },
+            "runs": [
+                {
+                    "wall": 26.4618,
+                    "user": 21.9426,
+                    "system": 4.0794,
+                    "max_rss_mb": 430.2
+                },
+                {
+                    "wall": 24.9191,
+                    "user": 20.4458,
+                    "system": 4.1041,
+                    "max_rss_mb": 430
+                },
+                {
+                    "wall": 21.883,
+                    "user": 18.7694,
+                    "system": 2.821,
+                    "max_rss_mb": 430
+                },
+                {
+                    "wall": 24.6728,
+                    "user": 20.3042,
+                    "system": 3.9436,
+                    "max_rss_mb": 430
+                },
+                {
+                    "wall": 23.2972,
+                    "user": 19.2367,
+                    "system": 3.7536,
+                    "max_rss_mb": 430
+                }
+            ]
+        }
+    ]
+}

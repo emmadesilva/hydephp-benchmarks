@@ -61,5 +61,27 @@ php ../../../patches/verify.php
 # Features::hasRss() OK: the patched condition agrees with and without posts.
 ```
 
+Hyde's own tests agree. Every test file in hyde/framework 2.0.3 that touches either class, or the RSS feed, sitemap
+and metadata code around them, was run against stock 2.0.3 and then with both patches, from a clean project each
+time: 293 tests in 17 files, same results both ways. (One more file, `MarkdownPostUnitTest`, doesn't load with the
+`hyde/testing` version on Packagist, stock or patched.)
+
+## Side effects
+
+- **Output:** none found, see above. The fixed build writes byte-identical pages.
+- **Memory:** the source path map adds a few MB at most: 221 MB versus 217 MB peak at 10,000 posts.
+- **Edge cases, in theory:**
+  - The route map is cached for the whole build and rebuilt when the number of routes changes. If something replaced
+    a route with a *different* page under the *same* route key halfway through a build, the map would be stale.
+    Nothing in Hyde does that. Extensions add their routes when the kernel boots, before any page compiles.
+  - The original ran one `str_replace()` per route in sequence, so a link it had just rewritten could in theory be
+    rewritten again by a later route. The fix rewrites each link once. That would need a page's output link to be
+    another page's source path, like `_pages/foo.md`, which Hyde never produces.
+  - The media file map used to be built on the first page compiled. Now it's built on the first page that has an
+    image. Both are cached for the rest of the process, exactly as before.
+  - If PCRE fails on some enormous page (it shouldn't, the pattern can't backtrack), the page is returned unchanged
+    instead of throwing.
+- **Faster in the small, too.** A 100-post site with the default theme went from 1.27 s to 1.00 s.
+
 The benchmark's `*-patched` cases load these two files from the `hyde` entry script before Composer's autoloader
 would load the originals, so `vendor/` is never modified.

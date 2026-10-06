@@ -1,0 +1,381 @@
+{
+    "suite": "single-core",
+    "updated": "2026-10-06T12:54:26+00:00",
+    "machine": {
+        "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+        "cores": 4,
+        "memory_gb": 15.7,
+        "os": "Linux 6.18.44-fc-v70",
+        "php": "8.3.6",
+        "node": "v22.22.0",
+        "ruby": "3.3.6"
+    },
+    "cases": [
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 10000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": 1,
+            "command": "taskset -c 0-0 /usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 10001,
+                "files": 10001,
+                "bytes": 63897249
+            },
+            "summary": {
+                "wall": {
+                    "median": 89.8541,
+                    "min": 87.2581,
+                    "max": 93.189,
+                    "stddev": 2.9731
+                },
+                "user": {
+                    "median": 78.8078,
+                    "min": 75.5916,
+                    "max": 81.469,
+                    "stddev": 2.9431
+                },
+                "system": {
+                    "median": 10.3389,
+                    "min": 9.7315,
+                    "max": 10.3598,
+                    "stddev": 0.3569
+                },
+                "max_rss_mb": {
+                    "median": 221.3,
+                    "min": 221.1,
+                    "max": 221.4,
+                    "stddev": 0.1528
+                }
+            },
+            "runs": [
+                {
+                    "wall": 87.2581,
+                    "user": 75.5916,
+                    "system": 10.3598,
+                    "max_rss_mb": 221.4
+                },
+                {
+                    "wall": 93.189,
+                    "user": 81.469,
+                    "system": 10.3389,
+                    "max_rss_mb": 221.1
+                },
+                {
+                    "wall": 89.8541,
+                    "user": 78.8078,
+                    "system": 9.7315,
+                    "max_rss_mb": 221.3
+                }
+            ]
+        },
+        {
+            "label": "jigsaw",
+            "generator": "jigsaw",
+            "version": "Jigsaw 1.8.8",
+            "posts": 10000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": 1,
+            "command": "taskset -c 0-0 /usr/bin/php8.3 vendor/tightenco/jigsaw/jigsaw build --pretty=false --no-ansi --no-interaction",
+            "output": {
+                "html": 10001,
+                "files": 10001,
+                "bytes": 64193598
+            },
+            "summary": {
+                "wall": {
+                    "median": 26.4882,
+                    "min": 25.3744,
+                    "max": 27.1953,
+                    "stddev": 0.918
+                },
+                "user": {
+                    "median": 18.7624,
+                    "min": 18.6527,
+                    "max": 19.8723,
+                    "stddev": 0.6747
+                },
+                "system": {
+                    "median": 6.8288,
+                    "min": 6.1796,
+                    "max": 7.3575,
+                    "stddev": 0.59
+                },
+                "max_rss_mb": {
+                    "median": 274.5,
+                    "min": 274.3,
+                    "max": 274.5,
+                    "stddev": 0.1155
+                }
+            },
+            "runs": [
+                {
+                    "wall": 25.3744,
+                    "user": 18.7624,
+                    "system": 6.1796,
+                    "max_rss_mb": 274.3
+                },
+                {
+                    "wall": 27.1953,
+                    "user": 19.8723,
+                    "system": 6.8288,
+                    "max_rss_mb": 274.5
+                },
+                {
+                    "wall": 26.4882,
+                    "user": 18.6527,
+                    "system": 7.3575,
+                    "max_rss_mb": 274.5
+                }
+            ]
+        },
+        {
+            "label": "sculpin",
+            "generator": "sculpin",
+            "version": "Sculpin 3.3.1",
+            "posts": 10000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": 1,
+            "command": "taskset -c 0-0 /usr/bin/php8.3 vendor/sculpin/sculpin/bin/sculpin generate --env=prod --no-ansi --no-interaction --project-dir=benchmarks/work/single-core/sculpin-10000-medium",
+            "output": {
+                "html": 10001,
+                "files": 10001,
+                "bytes": 65388173
+            },
+            "summary": {
+                "wall": {
+                    "median": 54.1256,
+                    "min": 52.689,
+                    "max": 55,
+                    "stddev": 1.1668
+                },
+                "user": {
+                    "median": 47.5837,
+                    "min": 45.7925,
+                    "max": 48.1667,
+                    "stddev": 1.2373
+                },
+                "system": {
+                    "median": 5.9867,
+                    "min": 5.7914,
+                    "max": 6.1128,
+                    "stddev": 0.1619
+                },
+                "max_rss_mb": {
+                    "median": 775.1,
+                    "min": 775,
+                    "max": 775.2,
+                    "stddev": 0.1
+                }
+            },
+            "runs": [
+                {
+                    "wall": 55,
+                    "user": 48.1667,
+                    "system": 5.9867,
+                    "max_rss_mb": 775
+                },
+                {
+                    "wall": 54.1256,
+                    "user": 47.5837,
+                    "system": 5.7914,
+                    "max_rss_mb": 775.2
+                },
+                {
+                    "wall": 52.689,
+                    "user": 45.7925,
+                    "system": 6.1128,
+                    "max_rss_mb": 775.1
+                }
+            ]
+        },
+        {
+            "label": "hugo",
+            "generator": "hugo",
+            "version": "Hugo 0.167.0",
+            "posts": 10000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": 1,
+            "command": "taskset -c 0-0 benchmarks/generators/hugo/hugo --quiet",
+            "output": {
+                "html": 10001,
+                "files": 10001,
+                "bytes": 65564239
+            },
+            "summary": {
+                "wall": {
+                    "median": 16.1018,
+                    "min": 15.2818,
+                    "max": 24.1823,
+                    "stddev": 4.9191
+                },
+                "user": {
+                    "median": 9.9683,
+                    "min": 9.643,
+                    "max": 12.5634,
+                    "stddev": 1.6005
+                },
+                "system": {
+                    "median": 5.8727,
+                    "min": 5.4551,
+                    "max": 11.3718,
+                    "stddev": 3.3021
+                },
+                "max_rss_mb": {
+                    "median": 1022.7,
+                    "min": 1021.3,
+                    "max": 1053,
+                    "stddev": 17.9115
+                }
+            },
+            "runs": [
+                {
+                    "wall": 24.1823,
+                    "user": 12.5634,
+                    "system": 11.3718,
+                    "max_rss_mb": 1021.3
+                },
+                {
+                    "wall": 15.2818,
+                    "user": 9.643,
+                    "system": 5.4551,
+                    "max_rss_mb": 1022.7
+                },
+                {
+                    "wall": 16.1018,
+                    "user": 9.9683,
+                    "system": 5.8727,
+                    "max_rss_mb": 1053
+                }
+            ]
+        },
+        {
+            "label": "eleventy",
+            "generator": "eleventy",
+            "version": "Eleventy 3.1.6",
+            "posts": 10000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": 1,
+            "command": "taskset -c 0-0 node benchmarks/generators/eleventy/node_modules/@11ty/eleventy/cmd.cjs --quiet",
+            "output": {
+                "html": 10001,
+                "files": 10001,
+                "bytes": 63887242
+            },
+            "summary": {
+                "wall": {
+                    "median": 32.9182,
+                    "min": 32.2607,
+                    "max": 35.5391,
+                    "stddev": 1.7344
+                },
+                "user": {
+                    "median": 26.5564,
+                    "min": 26.281,
+                    "max": 28.1716,
+                    "stddev": 1.0214
+                },
+                "system": {
+                    "median": 5.7892,
+                    "min": 5.5118,
+                    "max": 6.7211,
+                    "stddev": 0.6335
+                },
+                "max_rss_mb": {
+                    "median": 1067,
+                    "min": 1062.7,
+                    "max": 1073.7,
+                    "stddev": 5.5435
+                }
+            },
+            "runs": [
+                {
+                    "wall": 35.5391,
+                    "user": 28.1716,
+                    "system": 6.7211,
+                    "max_rss_mb": 1062.7
+                },
+                {
+                    "wall": 32.9182,
+                    "user": 26.5564,
+                    "system": 5.7892,
+                    "max_rss_mb": 1073.7
+                },
+                {
+                    "wall": 32.2607,
+                    "user": 26.281,
+                    "system": 5.5118,
+                    "max_rss_mb": 1067
+                }
+            ]
+        },
+        {
+            "label": "jekyll",
+            "generator": "jekyll",
+            "version": "Jekyll 4.4.1",
+            "posts": 10000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": 1,
+            "command": "taskset -c 0-0 bundle exec jekyll build --quiet --disable-disk-cache",
+            "output": {
+                "html": 10001,
+                "files": 10001,
+                "bytes": 65960356
+            },
+            "summary": {
+                "wall": {
+                    "median": 66.5865,
+                    "min": 65.1919,
+                    "max": 67.3077,
+                    "stddev": 1.0756
+                },
+                "user": {
+                    "median": 61.181,
+                    "min": 60.0506,
+                    "max": 62.4294,
+                    "stddev": 1.1899
+                },
+                "system": {
+                    "median": 4.1475,
+                    "min": 4.0866,
+                    "max": 4.4128,
+                    "stddev": 0.1734
+                },
+                "max_rss_mb": {
+                    "median": 369.3,
+                    "min": 368.3,
+                    "max": 369.3,
+                    "stddev": 0.5774
+                }
+            },
+            "runs": [
+                {
+                    "wall": 66.5865,
+                    "user": 61.181,
+                    "system": 4.4128,
+                    "max_rss_mb": 369.3
+                },
+                {
+                    "wall": 67.3077,
+                    "user": 62.4294,
+                    "system": 4.0866,
+                    "max_rss_mb": 368.3
+                },
+                {
+                    "wall": 65.1919,
+                    "user": 60.0506,
+                    "system": 4.1475,
+                    "max_rss_mb": 369.3
+                }
+            ]
+        }
+    ]
+}
