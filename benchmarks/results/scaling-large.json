@@ -1,6 +1,6 @@
 {
     "suite": "scaling-large",
-    "updated": "2026-10-06T13:54:33+00:00",
+    "updated": "2026-10-06T14:56:37+00:00",
     "machine": {
         "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
         "cores": 4,
@@ -374,6 +374,153 @@
                     "user": 38.6473,
                     "system": 11.3981,
                     "max_rss_mb": 506.5
+                }
+            ]
+        },
+        {
+            "label": "hyde-minimal-patched",
+            "generator": "hyde-minimal",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 40000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 40001,
+                "files": 40001,
+                "bytes": 256562430
+            },
+            "summary": {
+                "wall": {
+                    "median": 662.0294,
+                    "min": 662.0294,
+                    "max": 662.0294,
+                    "stddev": 0
+                },
+                "user": {
+                    "median": 630.8715,
+                    "min": 630.8715,
+                    "max": 630.8715,
+                    "stddev": 0
+                },
+                "system": {
+                    "median": 19.2453,
+                    "min": 19.2453,
+                    "max": 19.2453,
+                    "stddev": 0
+                },
+                "max_rss_mb": {
+                    "median": 701.9,
+                    "min": 701.9,
+                    "max": 701.9,
+                    "stddev": 0
+                }
+            },
+            "runs": [
+                {
+                    "wall": 662.0294,
+                    "user": 630.8715,
+                    "system": 19.2453,
+                    "max_rss_mb": 701.9
+                }
+            ]
+        },
+        {
+            "label": "hyde-patched",
+            "generator": "hyde",
+            "version": "HydePHP 2.0.3 + patch",
+            "posts": 40000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 hyde build --no-ansi --no-interaction",
+            "output": {
+                "html": 40002,
+                "files": 40009,
+                "bytes": 689935716
+            },
+            "summary": {
+                "wall": {
+                    "median": 1040.5225,
+                    "min": 1040.5225,
+                    "max": 1040.5225,
+                    "stddev": 0
+                },
+                "user": {
+                    "median": 992.9285,
+                    "min": 992.9285,
+                    "max": 992.9285,
+                    "stddev": 0
+                },
+                "system": {
+                    "median": 30.5525,
+                    "min": 30.5525,
+                    "max": 30.5525,
+                    "stddev": 0
+                },
+                "max_rss_mb": {
+                    "median": 835.1,
+                    "min": 835.1,
+                    "max": 835.1,
+                    "stddev": 0
+                }
+            },
+            "runs": [
+                {
+                    "wall": 1040.5225,
+                    "user": 992.9285,
+                    "system": 30.5525,
+                    "max_rss_mb": 835.1
+                }
+            ]
+        },
+        {
+            "label": "jigsaw",
+            "generator": "jigsaw",
+            "version": "Jigsaw 1.8.8",
+            "posts": 40000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "/usr/bin/php8.3 vendor/tightenco/jigsaw/jigsaw build --pretty=false --no-ansi --no-interaction",
+            "output": {
+                "html": 40001,
+                "files": 40001,
+                "bytes": 257753347
+            },
+            "summary": {
+                "wall": {
+                    "median": 130.829,
+                    "min": 130.829,
+                    "max": 130.829,
+                    "stddev": 0
+                },
+                "user": {
+                    "median": 88.362,
+                    "min": 88.362,
+                    "max": 88.362,
+                    "stddev": 0
+                },
+                "system": {
+                    "median": 32.2767,
+                    "min": 32.2767,
+                    "max": 32.2767,
+                    "stddev": 0
+                },
+                "max_rss_mb": {
+                    "median": 970.6,
+                    "min": 970.6,
+                    "max": 970.6,
+                    "stddev": 0
+                }
+            },
+            "runs": [
+                {
+                    "wall": 130.829,
+                    "user": 88.362,
+                    "system": 32.2767,
+                    "max_rss_mb": 970.6
                 }
             ]
         }
