@@ -68,7 +68,7 @@ OPcache is off by default for the PHP CLI. JIT is the tracing JIT with a 128 MB 
 
 ## One core versus all of them
 
-10,000 posts. "CPU time" adds up the time spent on every core, so it shows how much work was done regardless of parallelism.
+10,000 posts. The all-core column is from the compare suite, measured in a different session. "CPU time" adds up the time spent on every core, so it shows how much work was done regardless of parallelism.
 
 | Generator | All 4 cores | 1 core | CPU time (all cores) | Speed-up from more cores |
 | --- | ---: | ---: | ---: | ---: |

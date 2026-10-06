@@ -224,7 +224,7 @@ if (isset($results['php'])) {
 // --- single core -----------------------------------------------------------------------------
 
 if (isset($results['single-core'], $results['compare'])) {
-    $md .= "## One core versus all of them\n\n10,000 posts. \"CPU time\" adds up the time spent on every core, so it shows how much work was done regardless of parallelism.\n\n";
+    $md .= "## One core versus all of them\n\n10,000 posts. The all-core column is from the compare suite, measured in a different session. \"CPU time\" adds up the time spent on every core, so it shows how much work was done regardless of parallelism.\n\n";
     $md .= "| Generator | All {$machine['cores']} cores | 1 core | CPU time (all cores) | Speed-up from more cores |\n| --- | ---: | ---: | ---: | ---: |\n";
     $rows = [];
     foreach ($results['single-core']['cases'] as $single) {
@@ -241,12 +241,7 @@ if (isset($results['single-core'], $results['compare'])) {
     usort($rows, fn ($x, $y) => $x['b'] <=> $y['b']);
     $md .= "\n";
 
-    file_put_contents("$charts/single-core.svg", Svg::dumbbell(
-        'All cores versus one core, 10,000 posts',
-        'Median build time. The further apart the dots, the more a generator gains from extra cores.',
-        $rows,
-        [Svg::BLUE, "All {$machine['cores']} cores", Svg::ORANGE, 'Pinned to 1 core'],
-    ));
+    // No chart: the single-core and all-core numbers come from different runs, so a side-by-side chart would overstate them.
 }
 
 // --- startup, jekyll cache, tree --------------------------------------------------------------
