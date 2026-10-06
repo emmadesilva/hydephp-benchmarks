@@ -1,0 +1,161 @@
+{
+    "suite": "jekyll-cache",
+    "updated": "2026-10-06T15:20:23+00:00",
+    "machine": {
+        "cpu": "Intel(R) Xeon(R) Processor @ 2.80GHz",
+        "cores": 4,
+        "memory_gb": 15.7,
+        "os": "Linux 6.18.44-fc-v70",
+        "php": "8.3.6",
+        "node": "v22.22.0",
+        "ruby": "3.3.6"
+    },
+    "cases": [
+        {
+            "label": "jekyll",
+            "generator": "jekyll",
+            "version": "Jekyll 4.4.1",
+            "posts": 1000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "bundle exec jekyll build --quiet --disable-disk-cache",
+            "output": {
+                "html": 1001,
+                "files": 1001,
+                "bytes": 6528355
+            },
+            "summary": {
+                "wall": {
+                    "median": 7.6527,
+                    "min": 7.2045,
+                    "max": 8.7243,
+                    "stddev": 0.6955
+                },
+                "user": {
+                    "median": 7.0066,
+                    "min": 6.3756,
+                    "max": 7.8692,
+                    "stddev": 0.6505
+                },
+                "system": {
+                    "median": 0.7023,
+                    "min": 0.5404,
+                    "max": 0.7168,
+                    "stddev": 0.0742
+                },
+                "max_rss_mb": {
+                    "median": 91.5,
+                    "min": 90.7,
+                    "max": 91.6,
+                    "stddev": 0.3782
+                }
+            },
+            "runs": [
+                {
+                    "wall": 7.6527,
+                    "user": 7.0066,
+                    "system": 0.5404,
+                    "max_rss_mb": 91.6
+                },
+                {
+                    "wall": 8.4786,
+                    "user": 7.5513,
+                    "system": 0.7023,
+                    "max_rss_mb": 91.5
+                },
+                {
+                    "wall": 7.2831,
+                    "user": 6.4897,
+                    "system": 0.6648,
+                    "max_rss_mb": 90.7
+                },
+                {
+                    "wall": 7.2045,
+                    "user": 6.3756,
+                    "system": 0.7147,
+                    "max_rss_mb": 91.6
+                },
+                {
+                    "wall": 8.7243,
+                    "user": 7.8692,
+                    "system": 0.7168,
+                    "max_rss_mb": 91.3
+                }
+            ]
+        },
+        {
+            "label": "jekyll-disk-cache",
+            "generator": "jekyll",
+            "version": "Jekyll 4.4.1",
+            "posts": 1000,
+            "content": "medium",
+            "php_args": [],
+            "cpus": null,
+            "command": "bundle exec jekyll build --quiet",
+            "output": {
+                "html": 1001,
+                "files": 1001,
+                "bytes": 6528355
+            },
+            "summary": {
+                "wall": {
+                    "median": 2.5053,
+                    "min": 2.2736,
+                    "max": 3.0299,
+                    "stddev": 0.3581
+                },
+                "user": {
+                    "median": 1.992,
+                    "min": 1.6226,
+                    "max": 2.1087,
+                    "stddev": 0.2112
+                },
+                "system": {
+                    "median": 0.72,
+                    "min": 0.4383,
+                    "max": 0.9622,
+                    "stddev": 0.2234
+                },
+                "max_rss_mb": {
+                    "median": 77.1,
+                    "min": 76.6,
+                    "max": 77.5,
+                    "stddev": 0.3507
+                }
+            },
+            "runs": [
+                {
+                    "wall": 2.5053,
+                    "user": 2.0303,
+                    "system": 0.4383,
+                    "max_rss_mb": 77.1
+                },
+                {
+                    "wall": 2.2736,
+                    "user": 1.7196,
+                    "system": 0.5199,
+                    "max_rss_mb": 76.6
+                },
+                {
+                    "wall": 2.3735,
+                    "user": 1.6226,
+                    "system": 0.72,
+                    "max_rss_mb": 77.5
+                },
+                {
+                    "wall": 3.0299,
+                    "user": 1.992,
+                    "system": 0.9622,
+                    "max_rss_mb": 77.2
+                },
+                {
+                    "wall": 3.0108,
+                    "user": 2.1087,
+                    "system": 0.8721,
+                    "max_rss_mb": 76.8
+                }
+            ]
+        }
+    ]
+}
