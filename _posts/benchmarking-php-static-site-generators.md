@@ -295,8 +295,10 @@ its neighbours, so a finished document is one big reference cycle that only the 
 nicely. With its default php-markdown parser, which doesn't build a tree, the collector ran 8 times for 10,000 posts.
 With Jigsaw switched to CommonMark, it ran 264 times.
 
-Taking the tree apart once the HTML is rendered lets PHP free it straight away, and that halved the collector's work:
-{{TREE_SENTENCE}} Most of the garbage that's left comes from the converter Hyde builds for every page, because an
+Taking the tree apart once the HTML is rendered lets PHP free it straight away, and that halved the collector's work.
+Measured side by side at 10,000 posts, the minimal build went from 89.4 to 75.5 seconds (16% faster), and the default
+theme from 135.1 to 120.5 (11%). The bigger the site, the more it saves: in single builds at 20,000 posts, time spent in
+the collector went from 96 to 48 seconds. Most of the garbage that's left comes from the converter Hyde builds for every page, because an
 environment and its extensions point at each other too. Reusing the converter would take care of that, but it needs
 some care around per-page state, so that one's a design job rather than a patch.
 
@@ -354,9 +356,10 @@ differential test, and Hyde's own tests passing unchanged, are what make me comf
 **Measure from the outside.** The time a tool prints about itself and the time you spend waiting are not the same
 number, and the gap grows with the site.
 
-So, is the sentence from the other post true? With the fixes, it is: Hyde builds a post in about 6 ms with a minimal
-layout and 10–13 ms with the full default theme, and the cost per page stays roughly flat as the site grows,
-{{LARGE_SENTENCE}}. Without them, it isn't. Jigsaw is faster, mostly because of its Markdown parser, and Hugo is faster
+So, is the sentence from the other post true? With the fixes, very nearly. On this machine Hyde builds a post in 6–7
+ms with a minimal layout and 11–13 ms with the full default theme, and that holds up to 20,000 posts. At 40,000 it
+still creeps up, to about 11 ms and 19 ms, because of the garbage from that per-page converter, which is the next thing
+to fix. Without the fixes, the sentence isn't true at all. Jigsaw is faster, mostly because of its Markdown parser, and Hugo is faster
 than everyone. If raw build speed for a huge site is what you need most, Hugo is the honest answer. For everything
 else, the difference between a 5-second build and a 1-second build is mostly how long you look at your terminal.
 

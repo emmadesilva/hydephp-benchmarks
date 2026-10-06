@@ -102,6 +102,15 @@ Jekyll 4 caches converted Markdown between builds by default. The warm-up build 
 | Jekyll | 7.65 s |
 | Jekyll, disk cache on | 2.51 s |
 
+## Freeing the syntax tree (measured side by side)
+
+| Variant | Posts | Time | Per post | Peak memory |
+| --- | ---: | ---: | ---: | ---: |
+| Hyde + fix | 10,000 | 89.4 s | 8.9 ms | 221 MB |
+| Hyde + fix + tree fix | 10,000 | 75.5 s | 7.5 ms | 223 MB |
+| Hyde + fix, default theme | 10,000 | 135.1 s | 13.5 ms | 252 MB |
+| Hyde + fix + tree fix, default theme | 10,000 | 120.5 s | 12.0 ms | 254 MB |
+
 ## Freeing the syntax tree (a separate run)
 
 | Variant | Posts | Time | Per post | Peak memory |

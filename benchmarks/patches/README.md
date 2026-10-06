@@ -12,7 +12,7 @@ patch -p1 < hyde-framework-2.0.3.patch
 | Patch | What it fixes | Effect |
 | --- | --- | --- |
 | [`hyde-framework-2.0.3.patch`](hyde-framework-2.0.3.patch) | Two places that do work for every page while compiling each page (1 and 2 below) | Build time stops growing with the square of the page count. 10,000 posts with the default theme: 61 min → 2 min 12 s |
-| [`free-syntax-tree.patch`](free-syntax-tree.patch) | Each page's Markdown syntax tree is left behind as circular garbage (3) | Half the garbage collector work. 20,000 posts, minimal layout: 224 s → 171 s |
+| [`free-syntax-tree.patch`](free-syntax-tree.patch) | Each page's Markdown syntax tree is left behind as circular garbage (3) | Half the garbage collector work. 10,000 posts: 11–16% faster, more on bigger sites |
 | [`unquoted-yaml-date.patch`](unquoted-yaml-date.patch) | `date: 2026-10-06` without quotes crashes the build (4) | Not a performance fix |
 
 ## 1. `DynamicMarkdownLinkProcessor::postprocess()`
@@ -76,9 +76,16 @@ frees it immediately:
 | Collector runs | 498 → 239 | 989 → 472 |
 | Time in the collector | 26 s → 13.5 s | 96 s → 48 s |
 | Total build time | 88.6 s → 75.3 s | 224 s → 171 s |
-| Peak memory | 221 → 167 MB | 384 → 307 MB |
 
-(Single builds measured with `gc_status()`. The `tree` suite measures it properly.)
+Those are single builds, measured with `gc_status()`. The `tree-compare` suite measured it properly at 10,000 posts,
+three interleaved builds each:
+
+| 10,000 posts | Fixes 1 and 2 | Plus fix 3 | Faster by |
+| --- | ---: | ---: | ---: |
+| Minimal layout | 89.4 s | 75.5 s | 16% |
+| Default theme | 135.1 s | 120.5 s | 11% |
+
+Peak memory (RSS) is unchanged, 221 MB against 223 MB at 10,000 posts.
 
 ### Not patched: one converter per page
 
@@ -138,7 +145,7 @@ patched, from a clean copy of the project every time. The results were identical
 ## Side effects
 
 - **Output:** byte-identical, see above.
-- **Memory:** patch 1's source path map adds about 4 MB at 10,000 posts. Patch 3 more than makes up for it.
+- **Memory:** patch 1's source path map adds about 4 MB at 10,000 posts. Patch 3 doesn't change peak memory.
 - **Edge cases, in theory:**
   - The route map is cached for the whole build and rebuilt when the number of routes changes. If something replaced
     a route with a *different* page under the *same* route key halfway through a build, the map would be stale.
