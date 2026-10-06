@@ -44,19 +44,21 @@ it waited for).
 | `content` | Short, medium and long posts at 1,000 posts, to see how much of a build is Markdown |
 | `php` | OPcache and the JIT, for the three PHP generators |
 | `single-core` | Every generator pinned to one core with `taskset`, to separate fast code from more cores |
+| `startup` | A one-post site, which is almost all startup cost |
+| `jekyll-cache` | Jekyll with and without its default on-disk Markdown cache |
+| `tree` | Hyde with the third patch, which frees each page's syntax tree, from 1,000 to 40,000 posts |
+| `tree-compare` | The same at 10,000 posts, side by side with the two-fix build |
 
 `php markdown.php` times Markdown conversion on its own: Hyde's renderer, league/commonmark and michelf/php-markdown.
 `php profile.php` profiles a build with [Excimer](https://www.mediawiki.org/wiki/Excimer), see the comment at the top
 of the file.
 
-## The Hyde patch
+## The Hyde patches
 
-The benchmark turned up a bug in hyde/framework 2.0.3 that makes build time grow with the square of the number of
-pages. [`patches/DynamicMarkdownLinkProcessor.php`](patches/DynamicMarkdownLinkProcessor.php) is a drop-in fix. The
-`*-patched` cases load it before Composer's autoloader would load the original, so nothing in `vendor/` is modified.
-
-[`patches/verify.php`](patches/verify.php) is a differential test. It runs the original and the patched class side by
-side on every page of a site, and on the inputs from Hyde's own unit tests, and fails on the first difference.
+The benchmark turned up two bugs in hyde/framework 2.0.3 that make build time grow with the square of the number of
+pages, plus a third, smaller effect from the garbage collector. [`patches/`](patches/README.md) has fixes for all
+three, how they were checked, and their side effects. The `*-patched` and `*-tree` cases load them before Composer's
+autoloader would load the originals, so nothing in `vendor/` is modified.
 
 ## Running it
 
@@ -76,7 +78,8 @@ Close everything else while it runs, and don't run two suites at the same time.
 ## Caveats
 
 - These numbers come from one 4-core cloud VM. Absolute times on your laptop will be different. The ratios between
-  generators are what to look at, and they held steady across every run made while writing this.
+  generators are what to look at. On this VM, absolute times drifted by up to 20% between sessions a few hours apart,
+  so compare numbers from the same suite run, where every case was measured interleaved.
 - Every generator could be made faster with configuration this benchmark doesn't use. The point is to compare
   what you get without tuning.
 - Generators differ in how much they do for you. A minimal layout is the fairest comparison of the build itself,

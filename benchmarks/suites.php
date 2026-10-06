@@ -9,7 +9,7 @@ declare(strict_types=1);
  *   adapter   Which generator, see src/Adapters.php
  *   args      Constructor arguments for the adapter, for variants like the patched Hyde
  *   posts     How many posts the corpus has
- *   content   Post length: short (~150 words), medium (~600 words) or long (~2,000 words)
+ *   content   Post length: short (~350 words), medium (~870 words) or long (~2,400 words)
  *   php       Extra `php -d` flags, for the PHP-only cases
  *   cpus      Pin the build to this many CPU cores with taskset (default: all of them)
  *   runs      Measured runs (default 5)
@@ -71,6 +71,9 @@ return [
         ...$cases(['hyde-minimal-tree', 'hyde-tree'], [1000, 10000], ['runs' => 3]),
         ...$cases(['hyde-minimal-tree', 'hyde-tree'], [20000, 40000], ['runs' => 1, 'warmup' => false]),
     ],
+
+    // Before and after the tree fix, measured side by side in one run.
+    'tree-compare' => $cases(['hyde-minimal-patched', 'hyde-minimal-tree', 'hyde-patched', 'hyde-tree'], [10000], ['runs' => 3]),
 
     // A one-post site, which is almost all startup cost.
     'startup' => $cases(['hyde', 'hyde-minimal-patched', 'jigsaw', 'sculpin', 'hugo', 'eleventy', 'jekyll'], [1]),

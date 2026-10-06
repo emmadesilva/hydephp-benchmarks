@@ -45,7 +45,7 @@ So every generator builds the same site:
 
 - **The same posts.** A generator script writes the Markdown from a fixed random seed, so every run gets byte-identical
   content: headings, paragraphs with bold text, inline code and links, lists, tables, quotes, fenced code blocks, and
-  a link back to an earlier post in about a third of them. Medium posts are about 600 words.
+  a link back to an earlier post in about a third of them. Medium posts are about 870 words.
 - **The same minimal layout.** A title, a byline and the post body, written once in each generator's template
   language: Blade, Twig, Go templates, Liquid. Plus a home page that lists every post, newest first.
 - **The same job.** Tag pages, feeds, sitemaps, 404 pages and build-time syntax highlighting are turned off wherever
@@ -67,7 +67,9 @@ across generators (run 1 of everything, then run 2 of everything). Cloud machine
 neighbours come and go, and interleaving means every generator gets the same weather.
 
 The machine is a 4-core cloud VM with PHP 8.3, Node 22 and Ruby 3.3. Your laptop will be faster or slower, but the
-ratios between generators are what matter, and those held steady across runs.
+ratios between generators are what matter. Absolute times on this VM drifted by up to 20% between sessions a few hours
+apart, so wherever I put two numbers next to each other in this post, they come from the same interleaved run unless I say
+otherwise.
 
 ## The first numbers didn't add up
 
@@ -159,14 +161,17 @@ whether there's at least one. Once per page. The fix stops at the first post it 
 
 A faster function that returns different HTML is not a fix. Unit tests only check the cases somebody thought of, so I
 also wrote a differential test. It boots a real Hyde site, loads the patched class under a different name next to the
-original, and feeds both the same HTML from the point of view of every page on the site. The inputs are every case from Hyde's own unit tests for this class, the real HTML of every
-page, and a link to every route and media file, with and without a leading slash.
+original, and feeds both the same HTML from the point of view of every page on the site. The inputs are every case
+from Hyde's own unit tests for this class, the real HTML of every page, and a link to every route and media file, with
+and without a leading slash.
 
 On a 1,002-page site that's 13,026 comparisons, and every output was identical. To make sure the test could actually
 fail, I broke the patch on purpose (I dropped the leading-slash handling) and it caught it on the first page.
 
 Then I ran every test file in Hyde's own suite that touches the two changed classes, or the feed, sitemap and metadata
-code around them, once on stock 2.0.3 and once patched: 293 tests, the same results both ways. {{BYTE_IDENTICAL}}
+code around them, once on stock 2.0.3 and once patched: 293 tests, the same results both ways. Finally, I built a 1,000-post site with
+the default theme both ways and compared every file. All 1,009 were identical, apart from the build timestamp in the
+RSS feed and sitemap.
 
 One thing that bit me while doing that: my first patched run had four failures, and for a minute I thought I'd broken
 image links. I hadn't. An earlier test run had failed halfway through and left a renamed file behind in my scratch
@@ -201,14 +206,17 @@ With Hyde fixed, here's every generator building the same 10,000-post site:
 | Eleventy 3.1.6 | 0.85 s | 2.98 s | 24.7 s | 1,148 MB |
 | Sculpin 3.3.1 | 0.51 s | 4.20 s | 50.0 s | 775 MB |
 | Jekyll 4.4.1 | 1.76 s | 6.41 s | 57.6 s | 367 MB |
-| Hyde with the fixes | 0.64 s | 5.56 s | 83.1 s | 221 MB |
+| Hyde with both fixes | 0.64 s | 5.56 s | 83.1 s | 221 MB |
 | Hyde 2.0.3 | 0.78 s | 17.9 s | 21 min 22 s | 217 MB |
 
 A few things stand out.
 
-**Hugo is in a different league,** and it isn't only because Go is compiled. Hugo used {{HUGO_CPU}} seconds of CPU time
-for a 6-second build: it spreads the work across every core. Pinned to a single core, it {{HUGO_SINGLE_CORE}}. All
-three PHP generators run on one core, so on a 4-core machine they leave three quarters of it idle.
+**Hugo is in a different league,** and it isn't only because Go is compiled. Hugo used 18.3 seconds of CPU time
+for a 6.1-second build, because it spreads the work across every core. Pinned to a single core with `taskset`, it took
+17.1 seconds, which is still faster than any other generator here using all four. (The single-core builds were a
+separate run a few hours later, so small differences between the two mean little. Eleventy's 30.1 seconds on one core
+against 24.7 on four could be partly drift. Hugo's factor of 2.8 can't.) The three PHP generators run on one core no matter what, so on a 4-core
+machine they leave three quarters of it idle.
 
 **Jigsaw is the fastest PHP generator, by a lot.** About 2.3 ms per post against Hyde's 6–8 ms. That's the gap I most
 wanted to understand, because Jigsaw and Hyde are built from the same Laravel pieces.
@@ -217,29 +225,45 @@ wanted to understand, because Jigsaw and Hyde are built from the same Laravel pi
 Hugo and Eleventy both went past a gigabyte. That's rarely a problem on your own machine, but it's the difference
 between fitting in a small CI runner or not.
 
-**Small sites are mostly startup.** At 100 posts, Eleventy spends most of its 0.85 seconds starting Node and loading
-modules, and Jekyll spends most of its 1.76 seconds in Bundler. Hyde needs about 0.2 seconds to boot Laravel Zero
-before it touches the first page. Below a few hundred pages, nobody will notice any of this.
+**Small sites are mostly startup.** I built a one-post site with each of them to measure the fixed cost: Hugo 0.10
+seconds, Jigsaw 0.13, Sculpin 0.21, Hyde 0.22 (0.29 with the default theme), Eleventy 0.71 and Jekyll 1.42. So at 100
+posts, most of Eleventy's 0.85 seconds and Jekyll's 1.76 is starting up. Below a few hundred pages, nobody will notice
+any of this.
 
 ## Where Hyde's time goes now
 
-Profiling the fixed build shows where the remaining gap to Jigsaw is:
+Profiling the fixed build (all three fixes, which you'll get to in a moment) at 1,000 posts shows where the remaining
+gap to Jigsaw is:
 
-{{PROFILE_TABLE}}
+| Part of the build | Share of the time |
+| --- | ---: |
+| Parsing Markdown | 46% |
+| Rendering Markdown to HTML, including headings | 31% |
+| ...of which rendering headings through Blade | 22% |
+| Finding pages and reading their front matter | 7% |
+| Writing files | 4% |
+| Everything else: booting, layouts, link rewriting | 12% |
 
-Half of a Hyde build is the Markdown parser. Hyde uses [league/commonmark](https://commonmark.thephpleague.com/), which
+Three quarters of a Hyde build is Markdown. Hyde uses [league/commonmark](https://commonmark.thephpleague.com/), which
 follows the CommonMark spec to the letter. Jigsaw uses michelf/php-markdown by default, which is older and less
-strict, but much faster. I timed the parsers on their own with the same posts:
+strict, but much faster. I timed the parsers on their own with the same 1,000 posts, converting each one in a loop:
 
-{{MARKDOWN_TABLE}}
+| Converter | Per post |
+| --- | ---: |
+| michelf/php-markdown, Jigsaw's default | 0.86 ms |
+| league/commonmark with GitHub-flavoured Markdown, one converter reused | 2.32 ms |
+| The same, with a new converter for every post | 2.68 ms |
+| Hyde's `Markdown::render()`, with all its extensions and processors | 5.38 ms |
 
 Jigsaw can switch to CommonMark with one config option, so I measured that as well. It goes from 22.9 to 48.7 seconds
-at 10,000 posts. More than half of the gap between Hyde and Jigsaw is just the choice of Markdown parser.
+at 10,000 posts, against 83.1 for Hyde. So about 40% of the gap between Hyde and Jigsaw is the choice of Markdown
+parser alone.
 
-Two Hyde-specific costs show up too, and both are easy to remove:
+Two Hyde-specific costs show up too:
 
 - **Every heading is rendered through a Blade component**, so Hyde can add permalink anchors to headings. It does that
-  even for blog posts, where permalinks are switched off by default. That's {{HEADING_SHARE}} of the build.
+  even for blog posts, where permalinks are switched off by default. That's 22% of the build, for markup a string
+  template could produce.
 - **Hyde builds a new Markdown converter for every page.** Building the CommonMark environment and registering its
   extensions costs about a third of a millisecond each time. As the next section shows, that's the smaller half of what
   it costs.
@@ -278,13 +302,18 @@ some care around per-page state, so that one's a design job rather than a patch.
 
 ## Things I didn't expect
 
-**The JIT makes most builds slower.** PHP's JIT has to compile hot code before it pays off, and a static site build
-doesn't run long enough for that to happen.
+**The JIT makes small builds slower and big builds barely faster.** PHP's JIT has to compile hot code before it pays
+off, and a small build is over before that happens.
 
-{{JIT_TABLE}}
+| Generator | 100 posts | 100 posts, JIT | 5,000 posts | 5,000 posts, JIT |
+| --- | ---: | ---: | ---: | ---: |
+| Hyde | 0.93 s | 1.24 s (+33%) | 36.1 s | 33.8 s (−6%) |
+| Jigsaw | 0.41 s | 0.56 s (+37%) | 12.5 s | 11.5 s (−8%) |
+| Sculpin | 0.61 s | 0.96 s (+59%) | 23.3 s | 22.4 s (−4%) |
 
-OPcache doesn't help either. On the command line, the cache only lives for one process, so it compiles every file once
-per build, which is what PHP does without it anyway.
+OPcache on its own is similar: 8 to 20% slower at 100 posts, 2 to 7% faster at 5,000. On the command line its cache
+only lives for one process, so every build compiles every file again anyway. Neither is worth turning on for a site
+generator unless your site is large.
 
 **This blog post crashed the build.** The first time I built the site with this post in it, Hyde refused:
 `DateString::__construct(): Argument #1 ($string) must be of type string, int given`. My front matter said
@@ -292,10 +321,15 @@ per build, which is what PHP does without it anyway.
 Hyde only expects a string. Quoting it works around it, and the fix in Hyde is two lines. It's also exactly how most
 people would write a date, which is why it's worth fixing rather than documenting.
 
-**Post length matters less than you'd think.** {{CONTENT_SENTENCE}}
+**Post length matters less than you'd think.** Long posts in the benchmark have about seven times as many words as
+short ones (2,400 against 350). At 1,000 posts, building the long ones took between 1.5 times as long (Eleventy) and
+2.9 times as long (Hyde). A surprising share of every build is the same per-page work whatever the length: reading the
+file, rendering the layout, writing the result. Hyde's ratio is the highest because so much of its time is Markdown.
 
-**The build time Hyde prints isn't the time you wait.** {{TIMER_SENTENCE}} It's worth timing builds from outside
-the process.
+**The build time Hyde prints isn't the time you wait.** For a one-post site, Hyde says it finished in 0.06 seconds.
+Timed from the outside, the process took 0.20. At 1,000 posts it printed 4.91 seconds for a build that took 5.25. Its
+timer starts inside the build command, so it can't see PHP starting up and Laravel booting before that, or everything
+being torn down afterwards, and the gap grew with the site. It's worth timing builds from outside the process.
 
 ## What I'm taking away from this
 

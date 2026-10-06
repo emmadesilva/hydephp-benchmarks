@@ -35,11 +35,94 @@ Runs marked with * were measured once, because one build takes many minutes.
 | 1,000 | 17.2 s | 5.67 s | 9.03 s | 17.2 ms | 5.7 ms |
 | 2,500 | 86.5 s* | 15.1 s | 23.6 s | 34.6 ms | 6.0 ms |
 | 5,000 | 319.3 s* | 33.1 s | 51.8 s | 63.9 ms | 6.6 ms |
+| 10,000 | – | 93.0 s | 145.9 s | – | 9.3 ms |
+| 20,000 | – | 206.9 s | 372.6 s | – | 10.3 ms |
+| 40,000 | – | 662.0 s* | 1,040.5 s* | – | 16.6 ms |
 
 ## Post length
 
-1,000 posts each time. Short posts are about 150 words, medium about 600, long about 2,000.
+1,000 posts each time. Short posts are about 350 words, medium about 870, long about 2,400.
 
 | Generator | Short | Medium | Long | Long ÷ short |
 | --- | ---: | ---: | ---: | ---: |
+| Hyde + fix | 4.47 s | 6.95 s | 13.1 s | 2.9× |
+| Jigsaw | 2.12 s | 3.12 s | 5.35 s | 2.5× |
+| Jigsaw (CommonMark) | 3.49 s | 4.48 s | 9.34 s | 2.7× |
+| Sculpin | 3.74 s | 4.57 s | 7.03 s | 1.9× |
+| Hugo | 0.83 s | 1.11 s | 1.32 s | 1.6× |
+| Eleventy | 2.90 s | 3.12 s | 4.30 s | 1.5× |
+| Jekyll | 5.37 s | 7.63 s | 13.3 s | 2.5× |
+
+## OPcache and JIT
+
+OPcache is off by default for the PHP CLI. JIT is the tracing JIT with a 128 MB buffer.
+
+| Generator | Posts | Default | + OPcache | + OPcache + JIT | JIT vs default |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Hyde + fix | 100 | 0.93 s | 1.00 s | 1.24 s | +33% |
+| Jigsaw | 100 | 0.41 s | 0.48 s | 0.56 s | +37% |
+| Sculpin | 100 | 0.61 s | 0.73 s | 0.96 s | +59% |
+| Hyde + fix | 5,000 | 36.1 s | 34.7 s | 33.8 s | -6% |
+| Jigsaw | 5,000 | 12.5 s | 11.6 s | 11.5 s | -8% |
+| Sculpin | 5,000 | 23.3 s | 23.0 s | 22.4 s | -4% |
+
+## One core versus all of them
+
+10,000 posts. "CPU time" adds up the time spent on every core, so it shows how much work was done regardless of parallelism.
+
+| Generator | All 4 cores | 1 core | CPU time (all cores) | Speed-up from more cores |
+| --- | ---: | ---: | ---: | ---: |
+| Hyde + fix | 83.1 s | 85.8 s | 81.9 s | 1.0× |
+| Jigsaw | 22.9 s | 25.4 s | 22.9 s | 1.1× |
+| Sculpin | 50.0 s | 51.7 s | 49.2 s | 1.0× |
+| Hugo | 6.11 s | 17.1 s | 18.3 s | 2.8× |
+| Eleventy | 24.7 s | 30.1 s | 30.6 s | 1.2× |
+| Jekyll | 57.6 s | 60.9 s | 57.1 s | 1.1× |
+
+## Startup
+
+A site with a single post, so nearly all of the time is starting up.
+
+| Generator | Time | Peak memory |
+| --- | ---: | ---: |
+| Hyde 2.0.3, default theme | 0.29 s | 51 MB |
+| Hyde + fix | 0.22 s | 51 MB |
+| Jigsaw | 0.13 s | 40 MB |
+| Sculpin | 0.21 s | 50 MB |
+| Hugo | 0.10 s | 48 MB |
+| Eleventy | 0.71 s | 95 MB |
+| Jekyll | 1.42 s | 60 MB |
+
+## Jekyll's disk cache
+
+Jekyll 4 caches converted Markdown between builds by default. The warm-up build fills the cache.
+
+| Setting | 1,000 posts |
+| --- | ---: |
+| Jekyll | 7.65 s |
+| Jekyll, disk cache on | 2.51 s |
+
+## Freeing the syntax tree (a separate run)
+
+| Variant | Posts | Time | Per post | Peak memory |
+| --- | ---: | ---: | ---: | ---: |
+| Hyde + fix + tree fix | 1,000 | 5.56 s | 5.6 ms | 69 MB |
+| Hyde + fix + tree fix, default theme | 1,000 | 10.6 s | 10.6 ms | 75 MB |
+| Hyde + fix + tree fix | 10,000 | 71.6 s | 7.2 ms | 223 MB |
+| Hyde + fix + tree fix, default theme | 10,000 | 117.0 s | 11.7 ms | 254 MB |
+| Hyde + fix + tree fix | 20,000 | 146.8 s* | 7.3 ms | 386 MB |
+| Hyde + fix + tree fix, default theme | 20,000 | 260.7 s* | 13.0 ms | 448 MB |
+| Hyde + fix + tree fix | 40,000 | 426.9 s* | 10.7 ms | 706 MB |
+| Hyde + fix + tree fix, default theme | 40,000 | 751.2 s* | 18.8 ms | 839 MB |
+
+## Markdown alone
+
+1000 medium posts converted to HTML in a loop, no files written, no layout.
+
+| Converter | Total | Per post |
+| --- | ---: | ---: |
+| Hyde's Markdown::render() | 5,381 ms | 5.38 ms |
+| league/commonmark + GFM, one converter | 2,315 ms | 2.32 ms |
+| league/commonmark + GFM, new converter per post | 2,676 ms | 2.68 ms |
+| michelf/php-markdown (MarkdownExtra) | 857 ms | 0.86 ms |
 

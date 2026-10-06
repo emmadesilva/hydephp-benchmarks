@@ -20,6 +20,8 @@ const NAMES = [
     'hyde-patched' => 'Hyde + fix, default theme',
     'hyde-minimal' => 'Hyde 2.0.3',
     'hyde-minimal-patched' => 'Hyde + fix',
+    'hyde-minimal-tree' => 'Hyde + fix + tree fix',
+    'hyde-tree' => 'Hyde + fix + tree fix, default theme',
     'jigsaw' => 'Jigsaw',
     'jigsaw-commonmark' => 'Jigsaw (CommonMark)',
     'sculpin' => 'Sculpin',
@@ -183,7 +185,7 @@ if (isset($results['scaling'])) {
 
 if (isset($results['content'])) {
     $cases = $results['content']['cases'];
-    $md .= "## Post length\n\n1,000 posts each time. Short posts are about 150 words, medium about 600, long about 2,000.\n\n";
+    $md .= "## Post length\n\n1,000 posts each time. Short posts are about 350 words, medium about 870, long about 2,400.\n\n";
     $md .= "| Generator | Short | Medium | Long | Long ÷ short |\n| --- | ---: | ---: | ---: | ---: |\n";
     foreach (array_keys(NAMES) as $label) {
         $by = [];
@@ -245,6 +247,37 @@ if (isset($results['single-core'], $results['compare'])) {
         $rows,
         [Svg::BLUE, "All {$machine['cores']} cores", Svg::ORANGE, 'Pinned to 1 core'],
     ));
+}
+
+// --- startup, jekyll cache, tree --------------------------------------------------------------
+
+if (isset($results['startup'])) {
+    $md .= "## Startup\n\nA site with a single post, so nearly all of the time is starting up.\n\n| Generator | Time | Peak memory |\n| --- | ---: | ---: |\n";
+    foreach ($results['startup']['cases'] as $case) {
+        $md .= sprintf("| %s | %s | %s MB |\n", NAMES[$case['label']], seconds($case), number_format($case['summary']['max_rss_mb']['median']));
+    }
+    $md .= "\n";
+}
+
+if (isset($results['jekyll-cache'])) {
+    $md .= "## Jekyll's disk cache\n\nJekyll 4 caches converted Markdown between builds by default. The warm-up build fills the cache.\n\n| Setting | 1,000 posts |\n| --- | ---: |\n";
+    foreach ($results['jekyll-cache']['cases'] as $case) {
+        $md .= sprintf("| %s | %s |\n", NAMES[$case['label']], seconds($case));
+    }
+    $md .= "\n";
+}
+
+foreach (['tree-compare' => 'measured side by side', 'tree' => 'a separate run'] as $suite => $how) {
+    if (! isset($results[$suite])) {
+        continue;
+    }
+    $md .= "## Freeing the syntax tree ($how)\n\n| Variant | Posts | Time | Per post | Peak memory |\n| --- | ---: | ---: | ---: | ---: |\n";
+    $cases = $results[$suite]['cases'];
+    usort($cases, fn ($a, $b) => [$a['posts'], $a['label']] <=> [$b['posts'], $b['label']]);
+    foreach ($cases as $case) {
+        $md .= sprintf("| %s | %s | %s | %s | %s MB |\n", NAMES[$case['label']], number_format($case['posts']), seconds($case), perPost($case), number_format($case['summary']['max_rss_mb']['median']));
+    }
+    $md .= "\n";
 }
 
 // --- markdown --------------------------------------------------------------------------------
