@@ -1,0 +1,9 @@
+baseURL = "https://example.com/"
+title = "Bench"
+uglyURLs = true
+# Only render what the other generators render: the posts and a home page.
+disableKinds = ["taxonomy", "term", "section", "rss", "sitemap", "robotsTXT", "404"]
+
+[markup.highlight]
+  # No other generator in the comparison highlights code at build time.
+  codeFences = false

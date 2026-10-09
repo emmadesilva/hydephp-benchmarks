@@ -1,0 +1,20 @@
+---
+use: [posts]
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Bench</title>
+</head>
+<body>
+<header><a href="/index.html">Bench</a></header>
+<main>
+    <ul>
+        {% for post in data.posts %}
+            <li><a href="{{ post.url }}">{{ post.title }}</a> <time>{{ post.date|date('M j, Y') }}</time></li>
+        {% endfor %}
+    </ul>
+</main>
+</body>
+</html>

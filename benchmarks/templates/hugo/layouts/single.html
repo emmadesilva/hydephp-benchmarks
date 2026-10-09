@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ .Title }} | Bench</title>
+    <meta name="description" content="{{ .Description }}">
+</head>
+<body>
+<header><a href="/index.html">Bench</a></header>
+<main>
+    <article>
+        <h1>{{ .Title }}</h1>
+        <p class="meta">By {{ .Params.author }} in {{ .Params.category }} on {{ .Date.Format "Jan 2, 2006" }}</p>
+        {{ .Content }}
+    </article>
+</main>
+</body>
+</html>
